@@ -1,0 +1,144 @@
+import java.awt.*;
+
+import javax.swing.*;
+
+public class MyFrame extends JFrame {
+
+	JFrame frame = new JFrame();
+	
+	MyFrame() {
+		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setContentPane(new MyPanel());
+		frame.setSize(1500,1000);
+		frame.setLocationRelativeTo(null);
+		frame.setLayout(null);
+		frame.setVisible(true);
+		
+	}
+	
+	class MyPanel extends JPanel {
+		
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			
+			g.drawLine(550, 100, 600, 150);
+			g.drawLine(550, 100, 600, 130);
+			g.drawLine(570, 50, 580, 118);
+			g.drawLine(580, 130, 600, 200);
+			g.drawLine(570, 50, 600, 130);
+			g.drawLine(600, 150, 600, 200);
+			g.drawLine(600, 130, 623, 150);
+			g.drawLine(600, 150, 623, 160);
+			g.drawLine(617, 100, 633, 100);
+			g.drawLine(617, 100, 610, 139);
+			g.drawLine(617, 100, 610, 139);
+			g.drawLine(615, 120, 623, 130);			
+			g.drawLine(605, 153, 605, 160);
+			g.drawLine(618, 157, 618, 164);
+			g.drawLine(605, 160, 618, 164);
+			g.drawLine(600, 168, 615, 190);
+			g.drawLine(615, 190, 637, 190);
+			
+			g.drawLine(650, 150, 700, 100);
+			g.drawLine(650, 130, 700, 100);
+			g.drawLine(680, 40, 650, 130);
+			g.drawLine(680, 40, 670, 118);
+			g.drawLine(670, 130, 650, 200);
+			g.drawLine(650, 150, 650, 200);
+			g.drawLine(650, 130, 623, 150);
+			g.drawLine(650, 150, 623, 160);
+			g.drawLine(633, 100, 639, 139);
+			g.drawLine(635, 120, 623, 130);
+			g.drawLine(630, 158, 630, 164);
+			g.drawLine(643, 153, 643, 160);
+			g.drawLine(630, 164, 643, 160);
+			g.drawLine(650, 168, 637, 190);
+			
+			
+			g.drawLine(590, 190, 530, 190);
+			g.drawLine(500, 250, 500, 350);
+			g.drawLine(500, 350, 550, 450);
+			g.drawLine(530, 250, 530, 170);
+			g.drawLine(530, 170, 520, 150);
+			g.drawLine(250, 130, 520, 150);
+			g.drawLine(250, 130, 260, 160);
+			g.drawLine(260, 160, 470, 200);
+			g.drawLine(470, 200, 490, 250);
+			g.drawLine(490, 250, 530, 250);
+			g.drawLine(450, 195, 370, 330);
+			g.drawLine(500, 250, 400, 400);
+			g.drawLine(400, 400, 370, 410);
+			g.drawLine(370, 410, 250, 300);
+			g.drawLine(370, 330, 290, 280);
+			g.drawLine(290, 280, 250, 300);
+			g.drawLine(290, 280, 260, 240);
+			g.drawLine(260, 240, 230, 255);
+			g.drawLine(255, 225, 215, 245);
+			g.drawLine(255, 225, 270, 230);
+			g.drawLine(270, 230, 300, 270);
+			g.drawLine(300, 270, 290, 280);
+			g.drawLine(250, 300, 190, 240);
+			g.drawLine(190, 240, 200, 230);
+			g.drawLine(200, 230, 245, 210);
+			g.drawLine(245, 210, 265, 230);
+			g.drawLine(200, 230, 230, 255);
+			g.drawLine(215, 225, 230, 238);
+			g.drawLine(230, 218, 245, 230);
+			g.drawLine(550, 450, 500, 650);
+			g.drawLine(500, 650, 500, 900);
+			g.drawLine(630, 600, 600, 700);
+			g.drawLine(600, 700, 600, 900);
+			g.drawLine(500, 900, 600, 900);
+			g.drawLine(500, 900, 450, 950);
+			g.drawLine(450, 950, 600, 950);
+			g.drawLine(600, 900, 600, 950);			
+			
+			g.drawLine(655, 190, 720, 190);
+			g.drawLine(765, 250, 765, 350);
+			g.drawLine(765, 350, 720, 450);
+			g.drawLine(550, 450, 720, 450);
+			g.drawLine(720, 250, 720, 170);
+			g.drawLine(720, 170, 730, 150);
+			g.drawLine(730, 150, 970, 130);
+			g.drawLine(970, 130, 960, 160);
+			g.drawLine(960, 160, 790, 200);
+			g.drawLine(790, 200, 770, 250);
+			g.drawLine(770, 250, 720, 250);
+			g.drawLine(810, 195, 920, 330);
+			g.drawLine(765, 250, 870, 390);
+			g.drawLine(870, 390, 890, 400);
+			g.drawLine(890, 400, 1050, 380);
+			g.drawLine(920, 330, 1030, 310);
+			g.drawLine(1030, 310, 1050, 380);
+			g.drawLine(1030, 310, 1080, 280);
+			g.drawLine(1080, 280, 1095, 295);
+			g.drawLine(1095, 295, 1065, 315);
+			g.drawLine(1065, 315, 1120, 310);
+			g.drawLine(1120, 310, 1125, 370);
+			g.drawLine(1125, 370, 1050, 380);
+			g.drawLine(1121, 328, 1070, 330);
+			g.drawLine(1122, 343, 1072, 345);
+			g.drawLine(1123, 358, 1074, 360);
+			g.drawLine(720, 450, 800, 650);
+			g.drawLine(800, 650, 800, 900);
+			g.drawLine(670, 600, 700, 700);
+			g.drawLine(630, 600, 670, 600);
+			g.drawLine(700, 700, 700, 900);
+			g.drawLine(700, 900, 800, 900);
+			g.drawLine(700, 900, 700, 950);
+			g.drawLine(700, 950, 850, 950);
+			g.drawLine(800, 900, 850, 950);
+			
+//			g.setColor(Color.red);		
+//			g.drawLine(20, 20, 100, 100);
+//			g.drawOval(120, 120, 50, 50);
+//			g.drawRect(20, 120, 50, 50);
+//			g.drawRoundRect(120, 20, 50, 50, 20, 20);
+
+		}
+		
+	}
+	
+	
+}
