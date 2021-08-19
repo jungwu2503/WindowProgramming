@@ -1,0 +1,141 @@
+import java.awt.*;
+import javax.swing.*;
+
+
+class DrawerPanel extends JPanel
+{
+	static int xCenter = 300;
+	static int yCenter = 300;
+	static int r = 200;
+	
+	DrawerPanel() {
+	}
+	
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+
+		g.drawLine(xCenter, 0, xCenter, yCenter*2);
+		g.drawLine(0, yCenter, xCenter*2, yCenter);
+		
+		double theta = 0;
+		double delta = (2.0*Math.PI)/100;
+		
+		double r = 0.0;
+		
+		//int oldX = (int)(r * Math.cos(-Math.PI/2) + xCenter);
+		//int oldY = (int)(r * Math.sin(-Math.PI/2) + yCenter);
+		int oldX = (int)(r * Math.cos(0.0) + xCenter);
+		int oldY = (int)(r * Math.sin(0.0) + yCenter);
+		
+		for (theta = 0; theta < 3*2*Math.PI + 0.1; theta = theta + delta) {
+			int x;
+			int y;
+			
+			r = Math.sqrt(theta);
+//			x = (int)(r * Math.cos(2*theta-1.0) + xCenter);
+//			y = (int)(r * Math.sin(3*theta-2.0) + yCenter);
+//			x = (int)(r * Math.cos(theta-Math.PI/2) + xCenter);
+//			y = (int)(r * Math.sin(theta-Math.PI/2) + yCenter);
+			x = (int)(10*r * Math.cos(theta) + xCenter);
+			y = (int)(10*r * Math.sin(theta) + yCenter);
+			
+			g.drawLine(oldX, oldY, x, y);
+			
+			oldX = x;
+			oldY = y;
+			
+/*			try {
+				Thread.sleep(100);
+				
+			} catch (InterruptedException e) {
+				
+			} */
+			
+		}
+		
+			
+	}
+}
+
+class DrawerFrame extends JFrame
+{
+	DrawerFrame() {
+		setTitle("Sin Graph");
+		setSize(600,600);
+		setLocation(100,100);
+
+		DrawerPanel panel = new DrawerPanel();
+		setContentPane(panel);
+	}
+}
+class CircleWindowTest 
+{
+	public static void main(String[] args) 
+	{
+		JFrame frame = new DrawerFrame();
+		frame.setVisible(true);
+
+	}
+}
+
+
+/*
+class DrawerPanel extends JPanel
+{
+	DrawerPanel() {
+	}
+	
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+
+		char[][] sc = new char[100][100];
+		int i, j;
+		double theta = 0;
+		double r = 40.0;
+		
+		for (i = 0; i < 100; i++) 
+			for (j = 0; j < 100; j++) 
+				sc[i][j] = ' ';
+		
+		for (theta = 0; theta < 2*Math.PI; theta = theta + 0.01) {
+			int x;
+			int y;
+			
+			x = (int)(r * Math.cos(theta) + 50);
+			y = (int)(r * Math.sin(theta) + 50);
+			
+			sc[y][x] = '*';					
+		}
+		
+		for (i = 0; i < 100; i++) {
+			for (j = 0; j < 100; j++) {
+				if (sc[i][j] == '*') {
+					g.drawOval(j, i, 1, 1);
+				}
+			}
+		}
+			
+	}
+}
+
+class DrawerFrame extends JFrame
+{
+	DrawerFrame() {
+		setTitle("Sin Graph");
+		setSize(1000,600);
+		setLocation(200,200);
+
+		DrawerPanel panel = new DrawerPanel();
+		setContentPane(panel);
+	}
+}
+class CircleWindowTest 
+{
+	public static void main(String[] args) 
+	{
+		JFrame frame = new DrawerFrame();
+		frame.setVisible(true);
+
+	}
+}
+*/
