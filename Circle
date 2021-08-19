@@ -1,0 +1,38 @@
+
+public class CircleTest {
+
+	public static void main(String[] args) {
+
+		char[][] sc = new char[100][100];
+		int i, j;
+		double theta = 0;
+		double r = 40.0;
+		
+		for (i = 0; i < 100; i++) 
+			for (j = 0; j < 100; j++) 
+				sc[i][j] = ' ';
+		
+		for (theta = 0; theta < 2*Math.PI; theta = theta + 0.01) {
+			int x;
+			int y;
+			
+			x = (int)(r * Math.cos(theta) + 50);
+			y = (int)(r * Math.sin(theta) + 50);
+			
+//			if (x >= 0 && y >= 0) {
+			sc[y][x] = '*';		
+//			}
+				
+		}
+		
+		for (i = 0; i < 100; i++) {
+			for (j = 0; j < 100; j++) {
+				System.out.printf("%c", sc[i][j]);
+			}
+			System.out.println();
+		}
+		
+
+	}
+
+}
