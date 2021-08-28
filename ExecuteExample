@@ -1,0 +1,28 @@
+import java.util.concurrent.*;
+
+public class ExecuteExample {
+
+	public static void main(String[] args) throws InterruptedException {
+
+		ExecutorService eS = Executors.newFixedThreadPool(2);
+		
+		for(int i = 0; i < 10; i++) {
+			Runnable runnable = new Runnable() {
+				public void run() {
+					ThreadPoolExecutor tPE = 
+							(ThreadPoolExecutor) eS;
+					int poolSize = tPE.getPoolSize();
+					String threadName = Thread.currentThread().getName();
+					System.out.println("[총 스레드 개수: " + poolSize + "] 작업 스레드 이름: " + threadName);
+					int value = Integer.parseInt("삼");
+				}
+			};
+			eS.execute(runnable);
+			
+			Thread.sleep(10);
+		}
+
+		eS.shutdown();
+	}
+
+}
