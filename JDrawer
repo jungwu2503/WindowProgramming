@@ -1,0 +1,259 @@
+import java.awt.Graphics;
+import java.awt.event.*;
+
+import javax.swing.*;
+
+//version 5
+//Anonymous object를 이용하여 MouseAdapter를 구현하는 경우
+class DrawerFrame extends JFrame {
+	
+	public DrawerFrame() {
+		setTitle("Drawer");
+		setSize(700,500);
+		setLocation(100,100);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		addMouseListener(new MouseAdapter() {
+		
+			@Override
+			public void mousePressed(MouseEvent e) {
+				System.out.println("mousePressed");
+				int x = e.getX();
+				int y = e.getY();
+				Graphics g = getGraphics();
+				g.drawLine(x-10, y-10, x+10, y+10);
+				g.drawLine(x+10, y-10, x-10, y+10);	
+			}
+
+		});
+	}
+	
+}
+
+public class Drawer {
+
+	public static void main(String[] args) {
+
+		JFrame drawerFrame = new DrawerFrame();
+		drawerFrame.setVisible(true);
+
+	}
+
+} 
+
+/* version 4
+// Anonymous object를 이용하여 MouseListener를 구현하는 경우
+class DrawerFrame extends JFrame {
+	
+	public DrawerFrame() {
+		setTitle("Drawer");
+		setSize(700,500);
+		setLocation(100,100);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		addMouseListener(new MouseListener() {
+		
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				System.out.println("mousePressed");
+				int x = e.getX();
+				int y = e.getY();
+				Graphics g = getGraphics();
+				g.drawLine(x-10, y-10, x+10, y+10);
+				g.drawLine(x+10, y-10, x-10, y+10);	
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+			
+		});
+	}
+	
+}
+
+public class Drawer {
+
+	public static void main(String[] args) {
+
+		JFrame drawerFrame = new DrawerFrame();
+		drawerFrame.setVisible(true);
+
+	}
+
+} 
+*/
+
+/* version 3
+// MouseAdapter를 상속받는 독립된 객체를 이용하는 경우
+class MyMouseListener extends MouseAdapter {
+
+	DrawerFrame frame;
+	MyMouseListener(DrawerFrame frame) {
+		this.frame = frame;
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		System.out.println("mousePressed");
+		int x = e.getX();
+		int y = e.getY();
+		Graphics g = frame.getGraphics();
+		g.drawLine(x-10, y-10, x+10, y+10);
+		g.drawLine(x+10, y-10, x-10, y+10);	
+	}
+	
+}
+
+class DrawerFrame extends JFrame {
+	
+	public DrawerFrame() {
+		setTitle("Drawer");
+		setSize(700,500);
+		setLocation(100,100);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		addMouseListener(new MyMouseListener(this));
+	}
+	
+}
+
+public class Drawer {
+
+	public static void main(String[] args) {
+
+		JFrame drawerFrame = new DrawerFrame();
+		drawerFrame.setVisible(true);
+
+	}
+
+} */
+
+/* version 2
+// 윈도우 객체가 MouseListener를 구현하는 경우
+class DrawerFrame extends JFrame implements MouseListener{
+	
+	public DrawerFrame() {
+		setTitle("Drawer");
+		setSize(700,500);
+		setLocation(100,100);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		addMouseListener(this);
+	}
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		System.out.println("mousePressed");
+		int x = e.getX();
+		int y = e.getY();
+		Graphics g = getGraphics();
+		g.drawLine(x-10, y-10, x+10, y+10);
+		g.drawLine(x+10, y-10, x-10, y+10);	
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {	
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+	}
+	
+}
+
+public class Drawer {
+
+	public static void main(String[] args) {
+
+		JFrame drawerFrame = new DrawerFrame();
+		drawerFrame.setVisible(true);
+
+	}
+
+}
+*/
+
+/* version 1
+//MouseListener를 구현하는 독립된 객체를 이용하는 경우
+class MyMouseListener implements MouseListener {
+
+	DrawerFrame frame;
+	MyMouseListener(DrawerFrame frame) {
+		this.frame = frame;
+		
+	}
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		System.out.println("mouseClicked");
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		System.out.println("mousePressed");
+		int x = e.getX();
+		int y = e.getY();
+		Graphics g = frame.getGraphics();
+		g.drawLine(x-10, y-10, x+10, y+10);
+		g.drawLine(x+10, y-10, x-10, y+10);	
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		System.out.println("mouseReleased");
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		System.out.println("mouseEntered");		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		System.out.println("mouseExited");
+	}
+	
+}
+
+class DrawerFrame extends JFrame {
+	
+	public DrawerFrame() {
+		setTitle("Drawer");
+		setSize(700,500);
+		setLocation(100,100);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		addMouseListener(new MyMouseListener(this));
+	}
+	
+}
+
+public class Drawer {
+
+	public static void main(String[] args) {
+
+		JFrame drawerFrame = new DrawerFrame();
+		drawerFrame.setVisible(true);
+
+	}
+
+}
+*/
