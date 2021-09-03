@@ -80,6 +80,17 @@ public class DrawerFrame extends JFrame {
 			}			
 		});
 		
+		JMenu figureMenu = new JMenu("그림(F)");
+		menus.add(figureMenu);
+		
+		JMenuItem figureBox = new JMenuItem("Box (B)");
+		figureMenu.add(figureBox);
+		figureBox.addActionListener((e) -> canvas.setWhatToDraw(DrawerView.DRAW_BOX));
+		
+		JMenuItem figureLine = new JMenuItem("Line (B)");
+		figureMenu.add(figureLine);
+		figureBox.addActionListener((e) -> canvas.setWhatToDraw(DrawerView.DRAW_LINE));
+		
 		JMenu helpMenu = new JMenu("도움말(H)");
 		menus.add(helpMenu);
 		
