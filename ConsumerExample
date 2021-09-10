@@ -1,0 +1,32 @@
+import java.util.function.*;
+
+public class ConsumerExample {
+
+	public static void main(String[] args) {
+
+		Consumer<String> consumer = t -> System.out.println(t + "8");
+		consumer.accept("java");
+		
+		BiConsumer<String, String> bigConsumer = (t, u) -> System.out.println(t + u);
+		bigConsumer.accept("java", "8");
+		
+		DoubleConsumer doubleConsumer = d -> System.out.println("java" + d);
+		doubleConsumer.accept(8.0);
+		
+		ObjIntConsumer<String> objIntConsumer = (t, i) -> System.out.println(t + i);
+		objIntConsumer.accept("Java", 8);
+	}
+
+}
+
+// java.util.function 패키지의 함수적 인터페이스
+
+// Consumer --매개값o/리턴값x  매개값->Consumer
+
+// Supplier --매개값x/리턴값o  Supplier->리턴값
+
+// Function --매개값o/리턴값o/주로 매개값을 리턴값으로 매핑   매개값->Function->리턴값
+
+// Operator --매개값o/리턴값o/매개값 연산후 결과리턴   매개값->Operator->리턴값
+
+// Predicate --매개값o/리턴타입=boolean/매개값조사후 T-F리턴  매개값->Predicate->boolean
