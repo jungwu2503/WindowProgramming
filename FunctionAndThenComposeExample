@@ -1,0 +1,77 @@
+import java.util.function.*;
+
+public class FunctionAndThenComposeExample {
+
+	public static void main(String[] args) {
+		
+		Function<Member, Address> functionA;
+		Function<Address, String> functionB;
+		Function<Member, String> functionAB;
+		String city;
+		
+		functionA = (m) -> m.getAddress();
+		functionB = (a) -> a.getCity();
+		
+		functionAB = functionA.andThen(functionB);
+		city = functionAB.apply(
+				new Member("홍길동", "hong", new Address("한국", "서울"))
+		);
+		
+		System.out.println("거주 도시: " + city);
+		
+		functionAB = functionB.compose(functionA);
+		city = functionAB.apply(
+				new Member("홍길동", "hong", new Address("한국", "서울"))
+		);
+		
+		System.out.println("거주 도시: " + city);
+		
+	}
+	
+}
+
+class Member {
+
+	private String name;
+	private String id;
+	private Address address;
+
+	public Member(String name, String id, Address address) {
+		this.name = name;
+		this.id = id;
+		this.address = address;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+}
+
+class Address {
+
+	private String country;
+	private String city;
+
+	public Address(String country, String city) {
+		this.country = country;
+		this.city = city;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+}
