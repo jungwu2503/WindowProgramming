@@ -1,0 +1,27 @@
+import java.io.*;
+import java.nio.charset.*;
+import java.nio.file.*;
+import java.util.stream.*;
+
+public class FromFileContentExample {
+
+	public static void main(String[] args) throws IOException {
+
+		Path path = Paths.get("src/sec02/stream_kind/linedata.txt");
+		Stream<String> stream;
+		
+		stream = Files.lines(path, Charset.defaultCharset()); //운영체제의 기본 문자셋
+		stream.forEach( System.out :: println ); // s -> System.out.println(s)와 동일
+		System.out.println();
+		
+		File file = path.toFile();
+		FileReader fileReader = new FileReader(file);
+		BufferedReader br = new BufferedReader(fileReader);
+		stream = br.lines();
+		stream.forEach( System.out :: println );
+		
+		
+		
+	}
+
+}
