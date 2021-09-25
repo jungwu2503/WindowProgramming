@@ -1,0 +1,56 @@
+import java.util.*;
+import java.util.stream.*;
+
+public class SortingExample {
+
+	public static void main(String[] args) {
+
+		IntStream intStream = Arrays.stream(new int[] {5, 3, 2, 1, 4} );
+		intStream
+			.sorted()
+			.forEach(n -> System.out.print(n + " ") );
+		
+		System.out.println();
+		
+		List<Student> studentList = Arrays.asList(
+			new Student("홍길동", 30),
+			new Student("신용권", 10),
+			new Student("김자바", 20)
+		);
+		
+		studentList.stream()
+			.sorted()
+			.forEach(s -> System.out.print(s.getScore() + " ") );
+		System.out.println();
+
+		studentList.stream()
+			.sorted( Comparator.reverseOrder() )
+			.forEach(s -> System.out.print(s.getScore() + " ") );
+		
+	}
+
+}
+
+class Student implements Comparable<Student> {
+	private String name;
+	private int score;
+	
+	public Student(String name, int score) {
+		this.name = name;
+		this.score = score;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public int getScore() {
+		return score;
+	}
+
+	@Override
+	public int compareTo(Student o) {
+		return Integer.compare(score, o.score);
+	}
+	
+}
