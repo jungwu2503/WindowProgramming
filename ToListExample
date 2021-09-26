@@ -1,0 +1,71 @@
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class ToListExample {
+
+	public static void main(String[] args) {
+
+		List<Student> totalList = Arrays.asList(
+				new Student("홍길동", 10, Student.Sex.MALE),
+				new Student("호날두", 6, Student.Sex.FEMALE),
+				new Student("김자바", 10, Student.Sex.MALE),
+				new Student("신용권", 6, Student.Sex.FEMALE)
+		);
+		
+		List<Student> maleList = totalList.stream()
+				.filter(s -> s.getSex() == Student.Sex.MALE)
+				.collect(Collectors.toList());
+		maleList.stream()
+		.forEach(s -> System.out.println(s.getName()));
+
+		System.out.println();
+		
+		Set<Student> femaleSet = totalList.stream()
+				.filter(s -> s.getSex() == Student.Sex.FEMALE)
+				.collect(Collectors.toCollection(HashSet :: new));
+		femaleSet.stream()
+		.forEach(s -> System.out.println(s.getName()));
+		
+	}
+
+}
+
+class Student {
+	public enum Sex { MALE, FEMALE }
+	public enum City { Seoul, Busan }
+	
+	private String name;
+	private int score;
+	private Sex sex;
+	private City city;
+	
+	public Student(String name, int score, Sex sex) {
+		this.name = name;
+		this.score = score;
+		this.sex = sex;
+	}
+
+	public Student(String name, int score, Sex sex, City city) {
+		this.name = name;
+		this.score = score;
+		this.sex = sex;
+		this.city = city;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public int getScore() {
+		return score;
+	}
+	
+	public Sex getSex() {
+		return sex;
+	}
+	
+	public City getCity() {
+		return city;
+	}
+	
+}
