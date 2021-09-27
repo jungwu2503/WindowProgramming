@@ -1,0 +1,88 @@
+import java.util.*;
+
+public class MaleStudentExample {
+
+	public static void main(String[] args) {
+
+		List<Student> totalList = Arrays.asList(
+			new Student("홍길동", 10, Student.Sex.MALE),
+			new Student("김자바", 6, Student.Sex.FEMALE),
+			new Student("신용권", 10, Student.Sex.MALE),
+			new Student("박파이썬", 6, Student.Sex.FEMALE)
+		);
+		
+		MaleStudent maleStudent = totalList.stream()
+				.filter(s -> s.getSex() == Student.Sex.MALE)
+				.collect(MaleStudent :: new, MaleStudent :: accumulate, MaleStudent :: combine);
+		
+		maleStudent.getList().stream()
+			.forEach(s -> System.out.println(s.getName()));
+		
+	}
+
+}
+
+class MaleStudent {
+	
+	private List<Student> list;
+	
+	public MaleStudent() {
+		list = new ArrayList<Student>();
+		System.out.println("[" + Thread.currentThread().getName() + "] MaleStudent()");
+	}
+	
+	public void accumulate(Student student) {
+		list.add(student);
+		System.out.println("[" + Thread.currentThread().getName() + "] accumulate()");
+	}
+	
+	public void combine(MaleStudent other) {
+		list.addAll(other.getList());
+		System.out.println("[" + Thread.currentThread().getName() + "] combine()");
+	}
+	
+	public List<Student> getList() {
+		return list;
+	}
+	
+}
+
+class Student {
+	public enum Sex { MALE, FEMALE }
+	public enum City { Seoul, Busan }
+
+	private String name;
+	private int score;
+	private Sex sex;
+	private City city;
+
+	public Student(String name, int score, Sex sex) {
+		this.name = name;
+		this.score = score;
+		this.sex = sex;
+	}
+
+	public Student(String name, int score, Sex sex, City city) {
+		this.name = name;
+		this.score = score;
+		this.sex = sex;
+		this.city = city;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public Sex getSex() {
+		return sex;
+	}
+
+	public City getCity() {
+		return city;
+	}
+
+}
