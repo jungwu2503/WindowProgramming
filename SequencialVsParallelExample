@@ -1,0 +1,46 @@
+import java.util.*;
+
+public class SequencialVsParallelExample {
+
+	public static void work(int value) { // 요소 처리
+		try {
+			Thread.sleep(100);
+		} catch(InterruptedException e) { }
+	}
+	
+	public static long testSequencial(List<Integer> list) { // 순차 처리
+		long start = System.nanoTime();
+		list.stream().forEach((a) -> work(a));
+		long end = System.nanoTime();
+		long runTime = end - start;
+		return runTime;
+	}
+	
+	public static long testParallel(List<Integer> list) { // 병렬 처리
+		long start = System.nanoTime();
+		list.stream().parallel().forEach((a)->work(a));
+		long end = System.nanoTime();
+		long runTime = end - start;
+		return runTime;
+	}
+	
+	public static void main(String[] args) {
+
+		List<Integer> list = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+
+		long timeSequencial = testSequencial(list); //순차 스트림 처리 시간 구하기
+		
+		long timeParallel = testParallel(list); // 병렬 스트림 처리 시간 구하기
+		
+		System.out.println("순차 - " + timeSequencial);
+		System.out.println("병렬 - " + timeParallel);
+		
+		if (timeSequencial < timeParallel) {
+			System.out.println("성능 테스트 결과: 순차 처리가 더 빠름");
+		} else if (timeSequencial > timeParallel) {
+			System.out.println("성능 테스트 결과: 병렬 처리가 더 빠름");
+		}
+		
+	}
+
+}
