@@ -1,0 +1,45 @@
+
+public class Main {
+
+	public static void main(String[] args) {
+
+		//Vehicle vehicle = new Vehicle(new Car());
+
+		Car car = new Car("Benz", 4445);
+		
+		car.ride();
+		car.brake();
+		
+	}
+
+}
+
+abstract class Vehicle {
+	
+	abstract void ride();
+	
+	abstract void brake();
+	
+}
+
+class Car extends Vehicle {
+	
+	String carName;
+	int carNum;
+	
+	Car(String carName, int carNum) {
+		this.carName = carName;
+		this.carNum = carNum;
+	}
+
+	@Override
+	void ride() {
+		System.out.println("내차가 갑니다~");
+	}
+
+	@Override
+	void brake() {
+		System.out.println("브레이크 밟기!");
+	}
+	
+}
