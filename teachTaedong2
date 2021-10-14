@@ -1,0 +1,66 @@
+
+public class Main {
+	
+	public static void main(String[] args) {
+		
+		Bank Hana = new HanaBank("태동");
+		Bank Kakao = new KakaoBank("시현");
+		Bank IBK = new IBKBank("경민");
+		
+		Bank.deposit("태동", 1231241, 3000);
+		Hana.loanLimit();
+		
+	}
+
+}
+
+interface Bank {
+	static void deposit(String name, int accountNum, int money) {
+		System.out.println(name + "에게 " + money + "원을 보냅니다. 계좌번호:(" + accountNum + ")");
+	}
+	
+	abstract void loanLimit();
+		
+}
+	
+class HanaBank implements Bank{
+	String user;
+	
+	HanaBank(String user) {
+		this.user = user;
+	}
+
+	@Override
+	public void loanLimit() {
+		System.out.println("대출 한도는 30%~");
+	}
+	
+}
+
+class KakaoBank implements Bank{
+	String user;
+	
+	KakaoBank(String user) {
+		this.user = user;
+	}
+
+	@Override
+	public void loanLimit() {
+		System.out.println("대출 한도는 20%~");
+	}
+	
+}
+
+class IBKBank implements Bank{
+	String user;
+	
+	IBKBank(String user) {
+		this.user = user;
+	}
+
+	@Override
+	public void loanLimit() {
+		System.out.println("대출 한도는 10%~");
+	}
+	
+}
