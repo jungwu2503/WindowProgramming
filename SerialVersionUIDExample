@@ -1,0 +1,33 @@
+import java.io.*;
+
+public class SerialVersionUIDExample {
+
+	public static void main(String[] args) throws Exception {
+
+		// 객체 직렬화
+		FileOutputStream fos = new FileOutputStream("C:/Temp/Object.dat");
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		ClassC classC = new ClassC();
+		classC.field1 = 1;
+		oos.writeObject(classC);
+		oos.flush();
+		oos.close();
+		fos.close();
+		
+		// 객체 역직렬화 
+/*		FileInputStream fis = new FileInputStream("C:/Temp/Object.dat");
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		ClassC classC = (ClassC) ois.readObject();
+		System.out.println("field1: " + classC.field1); */
+	}
+
+}
+
+class ClassC implements Serializable {
+	int field1;
+}
+
+class classC implements Serializable {
+	int field1;
+	int field2;
+}
