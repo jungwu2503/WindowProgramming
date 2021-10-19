@@ -1,0 +1,16 @@
+import java.io.IOException;
+import java.nio.file.*;
+
+public class FilesCopyMethodExample {
+
+	public static void main(String[] args) throws Exception {
+
+		Path from = Paths.get("./house1.jpg");
+		Path to = Paths.get("./house2.jpg");
+
+		Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+		System.out.println("파일 복사 성공");
+		
+	}
+
+}
