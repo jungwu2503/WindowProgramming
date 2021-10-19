@@ -1,0 +1,33 @@
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.*;
+
+public class FileCopyExample {
+
+	public static void main(String[] args) throws Exception {
+		
+		Path from = Paths.get("./house.jpg");
+		Path to = Paths.get("./house2.jpg");
+		
+		FileChannel fileChannel_from = FileChannel.open(from, StandardOpenOption.READ);
+		FileChannel fileChannel_to = FileChannel.open(to, StandardOpenOption.READ);
+		
+		ByteBuffer buffer = ByteBuffer.allocateDirect(100);
+		int byteCount;
+		
+		while(true) {
+			buffer.clear();
+			byteCount = fileChannel_from.read(buffer);
+			if (byteCount == -1) break;
+			buffer.flip();
+			fileChannel_to.write(buffer);
+		}
+		
+		fileChannel_from.close();
+		fileChannel_to.close();
+		System.out.println("파일 복사 성공");
+
+	}
+
+}
