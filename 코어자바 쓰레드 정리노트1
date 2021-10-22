@@ -1,0 +1,34 @@
+쓰레드의 상태 4가지
+1. new - 쓰레드 수행 전 특정한 양의 정보 등록, 필요한 메모리 할당은 start()메소드의 임무
+2. runnable - 수행 가능한
+3. blocked - ●sleep()메서드 호출될때
+                    ●입/출력 상의 블로킹되는 연산 호출
+                    ●wait()메소드 호출할 때
+                    ●다른 쓰레드에 의해 lock된 객체를 lock하려 할 때(Object lock)
+                    ●suspend() 메소드 호출할 때
+4. dead
+
+블록된 상태에서 다른 상태로의 이동
+1. 쓰레드가 수면 상태로 접어들면 명시된 밀리 초 숫자 파기
+2. 쓰레드가 입출력 연산이 끝나기를 기다리고 있으면 연산은 종료되야함
+3. wait가 호출되었으면 다른 쓰레드가 반드시 notify나 notifyAll을 호출
+4. 쓰레드가 다른 쓰레드 소유의 객체를 lock하기 위해 대기중이면 객체의 소유 쓰레드가 객체의 lock을 양보해야함
+5. 쓰레드 중단시 resume호출 (deprecated)
+
+쓰레드 종료 이유
+-run 메소드 종료 후 자연스럽게 종료
+-Uncaught Exception에 의해 갑작스레 종료
+stop메소드도 있는데 사용해서는 안됨(위험)
+
+쓰레드 상태 찾기
+isAlive메소드로 수행가능한지 블록되어있는지 확인
+
+쓰레드 인터럽트
+void interrupt() - 쓰레드의 interrupted 상태는 true됨,
+    쓰레드가 sleep이나 wait메소드의 호출로 블록 상태에 있으면 Interrupted Exception
+static boolean interrupted() - Current thread가 인터럽트 걸렸는지 검사. interrupted상태 false로 바꿈
+Boolean isInterrupted() - 인터럽트 걸렸는지 검사. interrupted()와 달리 interrupted 상태 바꾸지않음
+
+쓰레드 우선순위
+자바의 모든 쓰레드는 우선순위를 가짐. 기본적으로 부모 쓰레드의 우선순위를 상속받음.
+setPriority 메소드로 특정 쓰레드의 우선순위 설정가능. 
