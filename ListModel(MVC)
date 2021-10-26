@@ -1,0 +1,128 @@
+import java.awt.event.*;
+import java.util.ArrayList;
+
+import javax.swing.*;
+import javax.swing.event.ListDataListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+public class MyListTest {
+
+	public static void main(String[] args) {
+
+		MyListFrame frame = new MyListFrame();
+		frame.setVisible(true);
+		
+	}
+
+}
+
+class MyListModel implements ListModel {
+	
+	ArrayList<String> list;
+	
+	MyListModel() {
+		list = new ArrayList<String>();
+		list.add("Kim");
+		list.add("Park");
+		list.add("Lee");
+		list.add("Kwon");
+		list.add("Hong");
+		list.add("Kim");
+	}
+
+	@Override
+	public int getSize() {
+		return list.size();
+	}
+
+	@Override
+	public String getElementAt(int index) {
+		return list.get(index);
+	}
+
+	@Override
+	public void addListDataListener(ListDataListener l) {	}
+
+	@Override
+	public void removeListDataListener(ListDataListener l) {	}
+	
+	public void add(String s) {
+		list.add(s);
+	}
+	
+	public void remove(String s) {
+		list.remove(s);
+	}
+	
+}
+
+class MyListFrame extends JFrame  implements ActionListener, ListSelectionListener {
+	
+	JList list;
+	JScrollPane scrollPane;
+	JPanel panel;
+	JTextField field;
+	MyListModel myModel;
+	Object[] values;
+	
+	MyListFrame() {
+		setTitle("MyListTest");
+		setSize(500, 500);
+		
+		addWindowListener(new WindowAdapter() {
+				public void WindowClosing(WindowEvent e) {
+					System.exit(0);
+				}
+			});
+		
+		list = new JList();
+		myModel = new MyListModel();
+		list.setModel(myModel); // <----------- setModel
+		list.addListSelectionListener(this);
+		scrollPane = new JScrollPane(list);		
+		
+		panel = new JPanel();
+		panel.add(scrollPane);
+		
+		
+		
+		JButton addBtn = new JButton("Add");
+		panel.add(addBtn);
+		addBtn.addActionListener(this);
+		
+		field = new JTextField(10);		
+		panel.add(field);
+		
+		JButton removeButton = new JButton("Remove");
+		panel.add(removeButton);
+		removeButton.addActionListener(this);
+		
+		getContentPane().add(panel, "Center");
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getActionCommand().equals("Add")) {
+			myModel.add(field.getText());
+			list.updateUI();
+		} else if (e.getActionCommand().equals("Remove")) {
+			if (values == null || values.length == 0) return;
+			
+			for (int i = 0; i < values.length; i++) {
+				if (values[i] instanceof String) { //rtti
+					myModel.remove((String)values[i]);
+				}
+				list.updateUI();
+			}
+			
+		}
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		values = list.getSelectedValues();
+	}
+	
+}
