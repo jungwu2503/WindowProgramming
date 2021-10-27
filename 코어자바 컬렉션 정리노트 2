@@ -1,0 +1,49 @@
+각 컬렉션 클래스는 컬렉션 내의 모든 요소들을 포함하는 문자열을 반환하는 toString 메서드를 가짐
+
+Collection은 인터페이스가 아닌 추상화 클래스, 따라서 클래스에게 컬렉션의 기능을 손쉽게 제공.
+우리는 자바에서 인터페이스 내에 메서드들을 추가할수 없음. 그러므로 컬렉션 라이브러리는 다소 다른 접근방법을 취함.
+Collection 인터페이스는 모든 구현 클래스들이 제공해야 할 유용한 메서드들을 선언함.
+=>
+int size() / boolean isEmpty() / boolean contains(Object obj) / boolean containsAll(Collection c) / boolean equals(Object other) / 
+boolean addAll(Collection from) / boolean remove(Object obj) / boolean removeAll(Collection c) / void clear() / boolean retainAll(Collection c) / Object[] toArray()
+Collection 인터페이스를 구현 하는 모든 클래스가 이처럼 많은 메서드들을 제공해야 하는것은 괴로운 일, 구현자들을 보다 편하게 하기 위해 AbstractCollection 클래스는 추상화된 기본
+메서드들을 남겨 놓음. 콘크리트 컬렉션클래스는 AbstractCollection 클래스를 extend 할 수 있다.
+
+Collection
+Iterator iterator() : 컬렉션 내의 요소들을 방문할 때 사용되어 지는 반복자 반환
+int size() : 사이즈 반환
+boolean isEmpty() : 비어있다면 true반환
+boolean contains(Object obj) : obj 를 포함하면 true
+boolean containsAll(Collection others) : 해당 컬렉션이 다른 컬렉션내의 모든 요소 포함시 true
+boolean add(Object element) : 컬렉션에 요소 추가. 호출후 컬렉션 변하면 true
+boolean addAll(Collection other)
+boolean remove(Object obj)
+boolean removeAll(Collection other)
+void clear()
+boolean retainAll(Collection other)
+Object[] toArray()
+
+Iterator
+boolean hasNext()
+Object next()
+Object remove()
+
+Concrete 컬렉션
+
+배열과 배열의 동적 형태인 Vector클래스, 배열과 벡터는 단점이 많음. 배열의 중간 항목 삭제시 이동시켜야하는 수고
+연결 리스트가 이 문제 해결, 배열이 연속되는 메모리에 객체 참조를 저장하는 반면 연결 리스트는 각 객체를 별도의 연결에 저장.
+또한 각 연결은 연속해서 다음 연결에 대한 참조를 저장. 이중으로 연결. double linked
+연결 리스트의 중간 항목 제거 - 오직 제거될 항목 주변 연결들 갱신
+LinkedList 클래스는 Collection 인터페이스를 구현. 
+연결리스트와 일반 컬렉션 사이의 중요한 차이점 
+- 연결 리스트는 객체의 위치를 중요시하는 순서가 있는 컬렉션(Ordered Collection)임.
+LinkedList.add메서드는 객체를 리스트의 끝에 추가. 그러나 리스트의 중간에 객체 추가하길 원할땐 위치 의존적인 add메서드는 반복자의 역할을 해야함.
+반복자는 컬렉션 내에 위치를 묘사하기 때문. 반복자를 사용하여 항목을 추가하는 것은 컬렉션이 자연스럽게 순서를 갖게함.
+만일 반복해서 add 메서드를 호출하면 항목들은 우리가 제공한 순서에 따라 추가. 이 항목들은 모두 현재 반복자 위치 앞에 추가.
+ListIterator 메서드에서 초기 반환한 반복자와 함께 add연산을 사용할때 위치는 연결 리스트의 시작 지점임. 새롭게 추가된 항목은 리스트의 새로운 헤더가 됨.
+한 반복자는 다른 반복자가 컬렉션을 변경하는 동안 컬렉션을 탐색할 수 있음. 한 반복자가 다른 반복자로부터 방금 삭제한 항목 앞을 가고있다면 반복자는 현재 잘못 되어있고 더 이상 사용할 수 없다.
+연결 리스트는 이같은 변경을 감지하도록 설계됨. (ConcurrentModificationException 투구)
+동시변경 예외상황을 피하기 위해서 따라야 할 규칙 - 우리는 원하는데로 컨테이너에 많은 반복자를 부착할 수 있다. 이 반복자들을 모두 오직 읽기만 가능하게 할것. 또는 읽기와 쓰기 모두 가능한 하나의 
+반복자만을 부착.
+동시 변경을 감지하는 간단한 방법 - 컨테이너는 상호 배타적인 연산(항목추가와 삭제 같은) 수를 유지함. 각 반복자는 자신에게 책임이 있는 상호 배타적인 연산의 수를 별도로 기록함.
+각 반복자 메서드를 시작할 때 반복자는 반복자는 자신의 상호 배타적 연산 수를 컨테이너 것과 비교함. 다를때 Exception투구
