@@ -1,0 +1,35 @@
+WeakHash 맵
+키를 가지고 있는 값이 더 이상 프로그램 내에서 사용되지 않는다면? 
+키에 대한 마지막 참조가 사라질때 프로그램의 일부가 더 이상 키를 갖지 않기 때문에 키/값 쌍은
+맵에서 제거되지 않음. 왜 가비지 컬렉터가 제거하지 못할까?
+가비지 컬렉터는 살아있는 객체들을 추적함. 맵 객체가 살아있는한 맵 내의 모든 버켓들은 살아있고 반환되지 않음.
+오랫동안 살아있는 맵들에서 사용하지 않는 값들을 제거할 때 주의를 기울여야 함.
+WeakHashMap클래스는 가비지 컬렉터와 함께 키에대한 참조가 오직 해쉬 테이블 엔트리로부터 하나만 존재할 때 키/값 쌍을 제거
+WeakHashMap은 키들을 유지하기 위해 약한 참조(Weak Reference)를 사용. WeakReference 객체는 다른 객체에 대한 참조 유지.
+이 타입의 객체들은 가비지 컬렉터에 의해 특별한 방법으로 다뤄짐. 
+일반적인 가비지 컬렉터는 참조되지 않는 특정 객체를 발견하게 되면 손쉽게 반환. 그러나 만약 객체가 오직 WeakReference에 의해서
+도달할 수 있다면 가비지 컬렉터는 객체를 반환. 
+map
+Object get(Object key) : 해당 키와 관련된 값 가져옴
+Object put(Object key, Object value) : 맵에 키와 관련된 값을 넣음
+void putAll(Map entries) : 명시된 맵의 모든 항목들을 해당 맵에 추가
+boolean containsKey(Object key) : 만일 키가 맵에 있다면 true 반환
+boolean ContainsValue(Object value) : 만일 값이 맵에 있다면 true 반환
+Set entrySet() : 맵상에서 키/값 쌍의 Map.Entry 객체의 셋 뷰를 반환
+Set KeySet() : 맵 상의 모든 키들의 셋 뷰를 반환.
+Collection values() : 맵상의 모든 값들의 컬렉션 뷰 반환.
+
+Map.Entry
+Object getKey() / Object getValue() / Object setValue(Object value)
+
+HashMap
+HashMap() / HashMap(Map entries) / HashMap(int initialCapacity) / HashMap(int initialCapacity, float loadFactor)
+
+WeakHashMap
+WeakHashMap() / WeakHashMap(int initialCapacity, float loadFactor)
+
+SortedMap
+Comparator comparator() / Object firstKey() / Object lastKey()
+
+TreeMap
+TreeMap(Comparator c) / TreeMap(Map entries) / TreeMap(SortedMap entries)
