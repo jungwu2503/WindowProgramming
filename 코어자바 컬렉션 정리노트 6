@@ -1,0 +1,34 @@
+Collection 클래스는 변경할 수 없는 컬렉션의 뷰를 만들기 위한 다른 잠재적인 일련의 유용한 포장자를 가짐. 이러한 포장자들은 존재하는 컬렉션을 실시간에 검사하는 기능을 추가함.
+만약 컬렉션을 변경하는 시도가 감지되면 예외상황이 발생하고 컬렉션은 건드릴 수 없는 상태로 남겨둠.
+Array 클래스는 일반 자바 배열에 대한 List 포장자를 반환하는 asList 정적 메서드를 가지고 있다. 이 메서드는 리스트나 컬렉션 전달인자를 기대하는 메서드에게 배열을 전달하게 해줌.
+List cardList = Arrays.asList(cardDeck) 이 있을때, 반환되는 객체는 ArrayList가 아닌 내부의 배열에 접근할 수 있는 get과 set 메서드를 갖고있는 뷰 객체이다. 배열의 크기를 변경하는
+메서드들은 UnsupportedOperationException.
+
+하부 범위(subrange)
+많은 컬렉션들에 대한 하부 범위 뷰 구성.
+
+경량 컬렉션 포장자(LightWeight Collection Wrapper)
+Collection.nCopies(n, anObject) 메서드 호출은 List 인터페이스를 구현한 변경 불가능한 객체를 반환하고 각기 anObject로서 나타나는 n 항목을 갖는 환영(illusion)을 제공함.
+이것은 아주 적은 저장공간을 차지함. 객체는 오직 한번 저장. 
+Collection.singleton(anObject)은 (List를 제공하는 nCopies와 달리) Set 인터페이스를 구현하는 포장자 객체를 반환. 반환된 객체는 해쉬 테이블이나 트리의 오버헤드가 없는 불변의
+단일 항목셋을 구현. Collections.EMPTY_LIST와 Collections.EMPTY_SET 상수는 항목을 갖지 않는 List와 Set 인터페이스를 구현한 객체를 반환. 장점은 singleton 메서드의 장점과 유사-
+반환된 객체는 데이터 구조의 오버헤드를 갖지 않는다. 싱글톤과 비어있는 객체들은 리스트와 셋, 컨테이너를 기대하는 메서드에 대한 전달인자로서 잠재적으로 유용함.
+
+뷰의 플러그-앤-플레이 특성
+뷰의 몇가지 제약, 오직 읽기만 가능. 뷰는 크기를 변경하지 못하거나 제거는 가능하지만 추가는 불가능. 맵의 키뷰에 대해서도 마찬가지. 각각의 제약되는 뷰에 대한 별도의 
+인터페이스를 만드는것은 실제적으로 쓸모없는 인터페이스를 만들게 됨.
+
+Collections
+static Collection synchronizedCollection(Collection c) / static List synchronizedList(list c) / static Set synchronizedSet(Set c) /
+static SortedSet synchronizedSortedSet(SortedSet c) / static Map synchronizedMap(Map c) / static SortedMap synchronizedSortedMap(SortedMap c) /
+static Collection unmodifiableCollection(Collection c) / static List unmodifiableList(List c) / static Set unmodifiableSet(Set c) /
+static SortedSet unmodifiableSortedSet(SortedSet c) / static Map unmodifiableMap(Map c) / static SortedMap unmodifiableSortedMap(SortedMap c) /
+static List nCopies(int n, Object value) / static Set singleton(Object value) / static final List EMPTY_LIST / static final Set EMPTY_SET
+Arrays
+static List asList(Object[] array) : 변경은 가능하지만 크기 조정은 불가능한 배열내의 항목들의 리스트 뷰를 반환
+List
+List subList(int from, int to) : 주어진 범위 내의 항목들의 리스트 뷰를 반환
+SortedSet
+SortedSet subSet(Object from, Object to) / SortedSet headSet(Object to) / SortedSet tailSet(Object from) - 범위 내의 항목들의 뷰를 제공
+SortedMap
+SortedMap subMap(Object from, Object to) / SortedMap headMap(Object to) / SortedMap tailMap(Object from) - 범위 내의 키를 갖는 항목들의 맵 뷰를 반환
