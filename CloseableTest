@@ -1,0 +1,166 @@
+import java.awt.event.*;
+
+import javax.swing.*;
+
+public class CloseableTest {
+
+	public static void main(String[] args) {
+		JFrame frame = new CloseableFrame();
+		
+		frame.setVisible(true);
+	}
+
+}
+
+/*
+class CloseableFrame extends JFrame {
+	
+	CloseableFrame() {
+		setTitle("FirstFrame");
+		setSize(300,200);
+		setLocation(200,200);
+		addWindowListener(new CloseableWindowListener());
+	}
+	
+}
+
+
+// WindowListener를 구현하는 독립된 객체 이용
+class CloseableWindowListener implements WindowListener {
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		System.out.println("windowOpened");
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		System.out.println("windowClosing");
+		System.exit(0);
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		System.out.println("windowClosed");
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		System.out.println("windowIconified");
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		System.out.println("windowDeiconified");
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		System.out.println("windowActivated");
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		System.out.println("windowDeactivated");
+	}
+	
+}
+
+// 윈도우 객체가 WindowListener를 구현
+class CloseableFrame extends JFrame implements WindowListener {
+	
+	CloseableFrame() {
+		setTitle("FirstFrame");
+		setSize(300,200);
+		setLocation(200,200);
+		addWindowListener(this);
+	}
+	
+	@Override
+	public void windowOpened(WindowEvent e) {
+		System.out.println("windowOpened");
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		System.out.println("windowClosing");
+		System.exit(0);
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		System.out.println("windowClosed");
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		System.out.println("windowIconified");
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		System.out.println("windowDeiconified");
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		System.out.println("windowActivated");
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		System.out.println("windowDeactivated");
+	}
+	
+}
+
+
+// WindowAdapter를 상속받는 독립된 객체 이용
+abstract class WindowAdapter
+		implements WindowListener, WindowStateListener, WindowFocusListener {
+	
+	@Override
+	public void windowOpened(WindowEvent e) {
+		System.out.println("windowOpened");
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		System.out.println("windowClosing");
+		System.exit(0);
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		System.out.println("windowClosed");
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		System.out.println("windowIconified");
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		System.out.println("windowDeiconified");
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		System.out.println("windowActivated");
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		System.out.println("windowDeactivated");
+	}
+	
+}
+*/
+
+class CloseableWindowAdapter extends WindowAdapter {
+	public void windowClosing(WindowEvent e) {
+		System.out.println("windowClosing");
+		System.exit(0);
+	}
+}
