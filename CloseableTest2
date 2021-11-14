@@ -1,0 +1,43 @@
+import java.awt.event.*;
+
+import javax.swing.*;
+
+public class CloseableTest {
+
+	public static void main(String[] args) {
+		JFrame frame = new CloseableFrame();
+		
+		frame.setVisible(true);
+	}
+
+}
+
+// convenient function 이용
+class CloseableFrame extends JFrame {
+	
+	CloseableFrame() {
+		setTitle("FirstFrame");
+		setSize(300,200);
+		setLocation(200,200);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+	}
+	
+}
+
+/*
+// anonymous object- WindowAdapter
+class CloseableFrame extends JFrame {
+	
+	CloseableFrame() {
+		setTitle("FirstFrame");
+		setSize(300,200);
+		setLocation(200,200);
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
+	}
+	
+}
+*/
