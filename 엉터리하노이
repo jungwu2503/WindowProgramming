@@ -1,0 +1,576 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.*;
+
+import javax.swing.*;
+ 
+public class Main {
+ 
+	public static StringBuilder sb = new StringBuilder();
+ 
+	public static void main(String[] args) throws IOException {
+		/*BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+ 
+		int N = Integer.parseInt(br.readLine());
+ 
+		sb.append((int) (Math.pow(2, N) - 1)).append('\n');
+ 
+		Hanoi(N, 1, 2, 3);
+		System.out.println(sb); */
+		
+		DrawerFrame frame = new DrawerFrame();
+		frame.setVisible(true);
+		
+	}
+ 
+	/*
+		N : 원판의 개수 
+		start : 출발지 
+		mid : 옮기기 위해 이동해야 장소 
+		to : 목적지
+	 */
+ 
+	public static void Hanoi(int N, int start, int mid, int to) {
+		// 이동할 원반의 수가 1개라면?
+		if (N == 1) {
+			sb.append(start + " " + to + "\n");
+			return;
+		}
+		// STEP 1 : N-1개를 A에서 B로 이동
+		Hanoi(N - 1, start, to, mid);
+		
+		// STEP 2 : 1개를 A에서 C로 이동
+		sb.append(start + " " + to + "\n");
+		
+		// STEP 3 : N-1개를 B에서 C로 이동
+		Hanoi(N - 1, mid, start, to);
+ 
+	}
+}
+
+class DrawerFrame extends JFrame {
+	
+	DrawerFrame() {
+		setTitle("Ha");
+		setSize(700,500);
+		setLocation(100,100);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		MyPanel panel = new MyPanel();
+		setContentPane(panel);
+		
+		JButton btn = new JButton("버튼");
+		btn.addActionListener(new ActionListener() {
+			Graphics g;
+			int i = 0;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (i == 0) {
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.setColor(Color.yellow);
+					g.fillRect(x+10, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(x+20, y-40, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(x+30, y-80, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(x+40, y-120, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(x+50, y-160, 20, 20);
+				} else if (i == 1) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(x+50, y-160, 20, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(x+10, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(x+20, y-40, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(x+30, y-80, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(x+40, y-120, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(350, y, 20, 20);
+				} else if (i == 2) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(x+40, y-120, 40, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(x+10, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(x+20, y-40, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(x+30, y-80, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(540, y, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(350, y, 20, 20);
+				} else if (i == 3) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(350, y, 20, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(x+10, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(x+20, y-40, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(x+30, y-80, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(540, y, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(550, y-40, 20, 20);
+				} else if (i == 4) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(x+30, y-80, 60, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(x+10, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(x+20, y-40, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(330, y, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(540, y, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(550, y-40, 20, 20);
+				} else if (i == 5) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(550, y-40, 20, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(x+10, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(x+20, y-40, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(330, y, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(540, y, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(x+50, y-80, 20, 20);
+				} else if (i == 6) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(540, y, 40, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(x+10, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(x+20, y-40, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(330, y, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(340, y-40, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(x+50, y-80, 20, 20);
+				} else if (i == 7) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(x+50, y-80, 20, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(x+10, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(x+20, y-40, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(330, y, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(340, y-40, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(350, y-80, 20, 20);
+				} else if (i == 8) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(x+20, y-40, 80, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(x+10, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(520, y, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(330, y, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(340, y-40, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(350, y-80, 20, 20);
+				} else if (i == 9) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(350, y-80, 20, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(x+10, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(520, y, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(330, y, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(340, y-40, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(550, y-40, 20, 20);
+				} else if (i == 10) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(340, y-40, 40, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(x+10, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(520, y, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(330, y, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(x+40, y-40, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(550, y-40, 20, 20);
+				} else if (i == 11) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(550, y-40, 20, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(x+10, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(520, y, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(330, y, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(x+40, y-40, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(x+50, y-80, 20, 20);
+				} else if (i == 12) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(330, y, 60, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(x+10, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(520, y, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(530, y-40, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(x+40, y-40, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(x+50, y-80, 20, 20);
+				} else if (i == 13) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(x+50, y-80, 20, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(x+10, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(520, y, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(530, y-40, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(x+40, y-40, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(350, y, 20, 20);
+				} else if (i == 14) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(x+40, y-40, 40, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(x+10, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(520, y, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(530, y-40, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(540, y-80, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(350, y, 20, 20);
+				} else if (i == 15) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(350, y, 20, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(x+10, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(520, y, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(530, y-40, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(540, y-80, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(550, y-120, 20, 20);
+				} else if (i == 16) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(x+10, y, 100, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(310, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(520, y, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(530, y-40, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(540, y-80, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(550, y-120, 20, 20);
+				} else if (i == 17) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(550, y-120, 20, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(310, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(520, y, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(530, y-40, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(540, y-80, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(x+50, y, 20, 20);
+				}  else if (i == 18) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(540, y-80, 40, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(310, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(520, y, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(530, y-40, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(340, y-40, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(x+50, y, 20, 20);
+				} else if (i == 19) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(x+50, y, 20, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(310, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(520, y, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(530, y-40, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(340, y-40, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(350, y-80, 20, 20);
+				} else if (i == 20) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(530, y-40, 60, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(310, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(520, y, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(x+30, y, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(340, y-40, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(350, y-80, 20, 20);
+				} else if (i == 21) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(350, y-80, 20, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(310, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(520, y, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(x+30, y, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(340, y-40, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(550, y-40, 20, 20);
+				} else if (i == 22) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(340, y-40, 40, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(310, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(520, y, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(x+30, y, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(x+40, y-40, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(550, y-40, 20, 20);
+				} else if (i == 23) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(550, y-40, 20, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(310, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(520, y, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(x+30, y, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(x+40, y-40, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(x+50, y-80, 20, 20);
+				} else if (i == 24) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(520, y, 80, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(310, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(320, y-40, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(x+30, y, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(x+40, y-40, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(x+50, y-80, 20, 20);
+				} else if (i == 25) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(x+50, y-80, 20, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(310, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(320, y-40, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(x+30, y, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(x+40, y-40, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(350, y-80, 20, 20);
+				} else if (i == 26) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(x+40, y-40, 40, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(310, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(320, y-40, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(x+30, y, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(540, y, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(350, y-80, 20, 20);
+				} else if (i == 27) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(350, y-80, 20, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(310, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(320, y-40, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(x+30, y, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(540, y, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(550, y-40, 20, 20);
+				} else if (i == 28) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(x+30, y, 60, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(310, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(320, y-40, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(330, y-80, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(540, y, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(550, y-40, 20, 20);
+				} else if (i == 29) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(550, y-40, 20, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(310, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(320, y-40, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(330, y-80, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(540, y, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(x+50, y, 20, 20);
+				} else if (i == 30) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(540, y, 40, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(310, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(320, y-40, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(330, y-80, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(340, y-120, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(x+50, y, 20, 20);
+				} else if (i == 31) {					
+					int x = 100;
+					int y = 400;
+					g = getGraphics();
+					g.clearRect(x+50, y, 20, 20);
+					g.setColor(Color.yellow);
+					g.fillRect(310, y, 100, 20);
+					g.setColor(Color.green);
+					g.fillRect(320, y-40, 80, 20);
+					g.setColor(Color.magenta);
+					g.fillRect(330, y-80, 60, 20);
+					g.setColor(Color.red);
+					g.fillRect(340, y-120, 40, 20);
+					g.setColor(Color.blue);
+					g.fillRect(350, y-160, 20, 20);
+				}
+				
+				i++;
+			}
+		});
+		panel.add(btn);
+		
+	}
+	
+}
+
+class MyPanel extends JPanel {
+	
+	MyPanel() {
+		
+	}
+	
+	public void paintComponent(Graphics g) {
+		
+		g.drawLine(100, 400, 200, 400);
+		g.drawLine(300, 400, 400, 400);
+		g.drawLine(500, 400, 600, 400);
+		g.drawLine(150, 200, 150, 400);
+		g.drawLine(350, 200, 350, 400);
+		g.drawLine(550, 200, 550, 400);
+		
+	}
+	
+}
