@@ -1,0 +1,104 @@
+import java.awt.*;
+
+class Star extends OnePointFigure 
+{
+    static final long serialVersionUID = 2455740096438958603L;
+    
+    Star(Color color,int x1,int y1) {
+      super(color,x1,y1);
+    }
+    void draw(Graphics g) {
+    	//====================
+	  int XMAX = _x1;
+	  int YMAX = _y1;
+	  int XORG = XMAX / 2 ;
+	  int YORG = YMAX / 2 ;
+	  int RADIUS = 50 ;
+	  int NDOTS = 5;
+	    //=======================
+    	
+      g.setColor(_color);
+      g.drawOval(_x1-3,_y1-3,5,5);
+      g.fillOval(_x1-3,_y1-3,6,6);
+      //g.drawLine(_x1-30, _y1-30, _x1+30, _y1+30);
+      //g.drawLine(_x1+30, _y1-30, _x1-30, _y1+30);
+      
+      int i;
+      double step = 2 * Math.PI / NDOTS;
+      double theta = 0.0;
+      
+      int oldX = (int)(RADIUS * Math.cos(theta-Math.PI/2)) + _x1;
+      int oldY = (int)(RADIUS * Math.sin(theta-Math.PI/2)) + _y1;
+      
+      int[] bigPos = new int[30];
+      int[] smallPos = new int[30];
+      int index = 0;
+      
+      for (i = 0; i < NDOTS+1; i++) {
+    	  int x, y;
+    	  
+    	  x = (int)(RADIUS * Math.cos(theta-Math.PI/2)) + _x1;
+    	  y = (int)(RADIUS * Math.sin(theta-Math.PI/2)) + _y1;
+    	  
+    	  g.drawLine(oldX, oldY, x, y);
+    	  //g.drawLine(oldX+50, oldY+50, x+50, y+50);
+    	  oldX = x;
+    	  oldY = y;
+    	  
+    	  /*if (index < 10) {
+	    	  bigPos[index] = x;
+	    	  bigPos[index+1] = y;
+	    	  
+	    	  index += 2;
+    	  }*/
+    	  
+    	  //bigPos[2*i] = _x1;
+    	  //bigPos[2*i] = _y1;
+    	  
+    	  theta = theta + step;
+      }
+      
+      index = 0;
+      
+      RADIUS = (int) (0.38 * RADIUS);
+      
+      oldX = (int)(RADIUS * Math.cos(theta-Math.PI/2 - Math.PI)) + _x1;
+      oldY = (int)(RADIUS * Math.sin(theta-Math.PI/2 - Math.PI)) + _y1;
+      
+      for (i = 0; i < NDOTS+1; i++) {
+    	  int x, y;
+    	  
+    	  x = (int)(RADIUS * Math.cos(theta-Math.PI/2 - Math.PI)) + _x1;
+    	  y = (int)(RADIUS * Math.sin(theta-Math.PI/2 - Math.PI)) + _y1;
+    	  
+    	  g.drawLine(oldX, oldY, x, y);
+    	  oldX = x;
+    	  oldY = y;
+    	  
+    	  /*if (index < 10) {
+    		  smallPos[index] = x;
+	    	  smallPos[index+1] = y;
+	    	  
+	    	  index += 2;
+    	  }*/
+    	  //smallPos[2*i+1] = _x1;
+    	  //smallPos[2*i+1] = _y1;
+    	  
+    	  theta = theta + step;
+      }
+      
+      
+     /* g.drawPolygon(bigPos, bigPos, 5);
+      for (i = 0; i < 10; i++) {
+    	  System.out.println(bigPos[i] + " " + smallPos[i]);
+      }
+      System.out.println("===="); */
+      
+    }
+    Figure copy() {
+      Point newPoint = new Point(_color,_x1,_y1);
+      newPoint._popup = _popup;
+      newPoint.move(20,10);
+      return newPoint;
+    }
+}
