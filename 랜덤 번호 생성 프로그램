@@ -1,0 +1,96 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+
+import javax.swing.*;
+
+public class LottoryDrawingGUI {
+
+	public static void main(String[] args) {
+		LottoFrame lF = new LottoFrame();
+	}
+
+}
+
+class LottoFrame implements ActionListener{
+
+	JFrame frame = new JFrame();
+	JButton makeButton = new JButton("번호 자동 생성");
+	JButton resetButton = new JButton("RESET");
+	JTextArea lottoArea = new JTextArea();
+	
+	LottoFrame() {
+		
+		makeButton.setBounds(10,10,200,50);
+		makeButton.setFont(new Font("맑은 고딕",Font.PLAIN,20));
+		makeButton.setFocusable(false);
+		makeButton.setForeground(Color.BLUE);
+		makeButton.setHorizontalAlignment(JTextField.CENTER);
+		makeButton.addActionListener(this);
+		
+		resetButton.setBounds(220,10,200,50);
+		resetButton.setFont(new Font("Consolas",Font.PLAIN,20));
+		resetButton.setFocusable(false);
+		resetButton.setForeground(Color.red);
+		resetButton.addActionListener(this);
+		
+		lottoArea.setBounds(10,80,410,300);
+		lottoArea.setEditable(false);
+		
+		frame.add(makeButton);
+		frame.add(resetButton);
+		frame.add(lottoArea);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(450,450);
+		frame.setLayout(null);
+		frame.setVisible(true);
+		
+	}
+	
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource()==makeButton) {
+			makeNumber();
+		}
+		
+		if (e.getSource()==resetButton) {
+			deleteAll();
+		}
+		
+	}
+	
+	void makeNumber() {
+		int[] numbers = new int[7];
+		//boolean[] allNum = new boolean[46];
+		//allNum[0] = true;
+		
+		for (int i = 0; i < numbers.length; i++) {
+			numbers[i] = (int) (Math.random() * 45)+1;
+			//int x = (int) (Math.random() * 45)+1;
+			for (int j = 0; j < i; j++) {
+				if (numbers[i] == numbers[j]) {
+					i--;
+					break;
+				}
+			}
+			/*allNum[x] = true;			
+			if (!allNum[i]) {
+				numbers[i] = x;
+			} */
+		} 
+		
+		Arrays.sort(numbers);
+		
+		for (int i = 0; i < numbers.length; i++) {
+			lottoArea.append(numbers[i] + " ");
+		}
+		
+		lottoArea.append("\n");
+	}
+	
+	void deleteAll() {
+		lottoArea.setText(null);
+	}
+	
+}
