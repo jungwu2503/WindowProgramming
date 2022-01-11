@@ -1,0 +1,330 @@
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+import java.io.*;
+import java.net.*;
+import java.util.ArrayList;
+
+class ButtonPanel extends JPanel
+{
+	MainPanel clientWnd;
+	JTextField ip;
+	JButton connectButton;
+	JButton closeButton;
+	ButtonPanel(MainPanel clientWnd) {
+		this.clientWnd = clientWnd;
+
+		ip = new JTextField(15);
+		connectButton = new JButton("Connect");
+		closeButton = new JButton("Close");
+
+		ip.setText("localhost");
+
+		add(ip);
+		add(connectButton);
+		add(closeButton);
+
+		connectButton.addActionListener(clientWnd);
+		closeButton.addActionListener(clientWnd);
+	}
+	String getIpAddress() {
+		return ip.getText();
+	}
+}
+class InputListener extends KeyAdapter
+{
+	MainPanel clientWnd;
+	JTextField textInput;
+	InputListener(JTextField textInput,MainPanel clientWnd) {
+		this.clientWnd = clientWnd;
+		this.textInput = textInput;
+	}
+	public void keyPressed(KeyEvent ev) {
+		int keyCode = ev.getKeyCode();
+		if (keyCode == KeyEvent.VK_ENTER)
+		{
+			String msg = textInput.getText().trim();
+			clientWnd.sendText("[I say] " + msg);
+			clientWnd.sendLine(msg);
+			textInput.setText("");
+		}
+	}
+}
+class ReportPanel extends JPanel
+{
+	MainPanel clientWnd;
+	JTextField reportText;
+	JButton reportButton;
+	JButton queryButton;
+	ReportPanel(MainPanel clientWnd) {
+		this.clientWnd = clientWnd;
+
+		reportText = new JTextField(15);
+		reportButton = new JButton("Report");
+		queryButton = new JButton("Query");
+
+		add(reportText);
+		add(reportButton);
+		add(queryButton);
+
+		reportButton.addActionListener(clientWnd);
+		queryButton.addActionListener(clientWnd);
+	}
+	String getReportText() {
+		return reportText.getText();
+	}
+}
+class InputPanel extends JPanel
+{
+	MainPanel clientWnd;
+	JTextField textInput;
+	ReportPanel reportPanel;
+	InputPanel(MainPanel clientWnd) {
+		this.clientWnd = clientWnd;
+		setLayout(new GridLayout(2,1));
+
+		textInput = new JTextField();
+		textInput.addKeyListener(new InputListener(textInput,clientWnd));
+		reportPanel = new ReportPanel(clientWnd);
+
+		add(textInput);
+		add(reportPanel);
+	}
+	String getReportText() {
+		return reportPanel.getReportText();
+	}
+}
+//-------------------------------------------
+class MsgPanel extends JPanel
+{
+	MainPanel clientWnd;
+	JLabel sendLabel;
+	JLabel receiveLabel;
+	ArrayList<JLabel> sendLabelList = new ArrayList<>();
+	ArrayList<JLabel> receiveLabelList = new ArrayList<>();
+	JLabel prevSendLabel;
+	JLabel prevReceiveLabel;
+		
+	MsgPanel(MainPanel clientWnd) {
+		this.clientWnd = clientWnd;
+		setLayout(new GridLayout(1,2));
+		
+		sendLabel = new JLabel("보낸 메세지");
+		receiveLabel = new JLabel("받는 메세지");
+		sendLabel.setBorder(BorderFactory.createEtchedBorder());
+		receiveLabel.setBorder(BorderFactory.createEtchedBorder());		
+
+		add(receiveLabel);
+		add(sendLabel);
+	}
+	
+	void sending(String str, int x, int y) {
+		//sendLabel = new JLabel();
+		prevSendLabel = new JLabel();
+		prevSendLabel = sendLabel;
+		prevSendLabel.setBounds(x, y-30, 180, 50);
+		prevSendLabel.setBorder(BorderFactory.createLoweredBevelBorder());
+		sendLabel.setText(str);
+		sendLabel.setBounds(x, y, 180, 50);
+		receiveLabel.setBorder(BorderFactory.createEtchedBorder());
+		sendLabel.setBorder(BorderFactory.createLoweredBevelBorder());
+		
+		add(prevSendLabel);
+	}
+
+	void receiving(String str, int x, int y) {
+		//receiveLabel = new JLabel();
+		prevReceiveLabel = new JLabel();
+		prevReceiveLabel = sendLabel;
+		prevReceiveLabel.setBounds(x, y-30, 180, 50);
+		prevReceiveLabel.setBorder(BorderFactory.createLoweredBevelBorder());
+		receiveLabel.setText(str);
+		receiveLabel.setBounds(x, y, 180, 50);
+		sendLabel.setBorder(BorderFactory.createEtchedBorder());
+		receiveLabel.setBorder(BorderFactory.createLoweredBevelBorder());	
+		
+		add(prevReceiveLabel);
+	}
+	
+}
+//------------------------------------------
+class MainPanel extends JPanel implements ActionListener
+{
+	String ipAddress = "localhosr";
+	Socket chatClient;
+	BufferedReader fromChatServer;
+	PrintWriter toChatServer;
+	Thread chatThread;
+
+	ButtonPanel buttonPanel;
+	InputPanel inputPanel;
+//	JTextArea textBox;
+	JScrollPane textPane;
+	MsgPanel msgPanel;	
+	
+	MainPanel() {
+		buttonPanel = new ButtonPanel(this);
+		setLayout(new BorderLayout());
+
+		//textBox = new JTextArea();
+		msgPanel = new MsgPanel(this);
+		//System.out.println(msgPanel.getBounds());
+		textPane = new JScrollPane(msgPanel);
+		//textBox.setBorder(BorderFactory.createLoweredBevelBorder());
+		inputPanel = new InputPanel(this);
+		
+		//textPane.add(new JButton("버튼~~"));
+
+		//add(msgPanel);
+		add(buttonPanel,BorderLayout.NORTH);
+		add(textPane,BorderLayout.CENTER);
+		add(inputPanel,BorderLayout.SOUTH);
+	}
+	public void sendText(String msg) {
+		msgPanel.sending(msg, 200, 400);
+		
+		//textBox.append(msg + "\r\n");
+		//((MainPanel) textBox).sendMsg(msg);
+/*		JLabel label = new JLabel("메시지 왔어요");
+		label.setBounds(300,300,50,50);
+		JLabel label2 = new JLabel("메시지 왔어요");
+		label2.setBounds(200,200,50,50);
+		JLabel label3 = new JLabel("메시지 왔어요");
+		label3.setBounds(50,50,100,100);
+		JLabel label4 = new JLabel("메시지 왔어요");
+		label4.setBounds(20,300,50,50);
+		textBox.add(label);
+		textPane.add(label2);
+		inputPanel.add(label3);
+		textBox.add(label4); */
+	}
+	
+	public void receiveText(String msg) {
+		msgPanel.receiving(msg, 10, 400);
+	}
+	
+	//=====
+/*	public void sendMsg(String msg) {
+		JLabel label = new JLabel();
+		label.setBounds(300, 300, 50, 50);
+		
+	}*/
+	
+	public void sendLine(String msg) {
+		toChatServer.println(msg);
+		toChatServer.flush();
+	}
+	public void actionPerformed(ActionEvent ev) {
+		String cmd = ev.getActionCommand();
+		String ipAddress = buttonPanel.getIpAddress();
+		if (cmd.equals("Report"))
+		{
+			try
+			{
+				Socket client = new Socket(ipAddress,7000);
+				receiveText("Reporting...");
+				BufferedReader fromServer = new BufferedReader(new InputStreamReader(client.getInputStream()));
+				PrintWriter toServer = new PrintWriter(client.getOutputStream());
+
+				toServer.println("1");
+				toServer.flush();
+
+				String s = inputPanel.getReportText();
+				toServer.println(s);
+				toServer.flush();
+
+				s = fromServer.readLine();
+				receiveText("[Server says] " + s);
+			}
+			catch (IOException ex)
+			{
+				System.out.println(ex);
+			}
+		} else if (cmd.equals("Query"))
+		{
+			try
+			{
+				Socket client = new Socket(ipAddress,7000);
+				receiveText("Asking...");
+				BufferedReader fromServer = new BufferedReader(new InputStreamReader(client.getInputStream()));
+				PrintWriter toServer = new PrintWriter(client.getOutputStream());
+
+				toServer.println("2");
+				toServer.flush();
+
+				String s = fromServer.readLine();
+				receiveText("[Server answered] " + s + " Won.");
+			}
+			catch (IOException ex)
+			{
+				System.out.println(ex);
+			}
+		} else if (cmd.equals("Connect"))
+		{
+			try
+			{
+				chatClient = new Socket(ipAddress,7000);
+				receiveText("Connected...");
+				fromChatServer = new BufferedReader(new InputStreamReader(chatClient.getInputStream()));
+				toChatServer = new PrintWriter(chatClient.getOutputStream());
+
+				toChatServer.println("0");
+				toChatServer.flush();
+
+				chatThread = new Thread() {
+					public void run() {
+						try
+						{
+							String msg;
+							while(true) {
+								msg = fromChatServer.readLine();
+								receiveText("[Server says] " + msg);
+							}
+						}
+						catch (IOException ex)
+						{
+							System.out.println(ex);
+						}
+					}
+				};
+				chatThread.start();
+			}
+			catch (IOException ex)
+			{
+				System.out.println(ex);
+				chatThread.stop();
+			}
+		} else if (cmd.equals("Close"))
+		{
+			try
+			{
+				fromChatServer.close();
+				toChatServer.close();
+				chatClient.close();
+				chatThread.stop();
+			}
+			catch (IOException ex)
+			{
+				System.out.println(ex);
+			}
+		}
+	}
+}
+class ClientFrame extends JFrame
+{
+	ClientFrame() {
+		super("Client");
+		setSize(400,600);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		Container contentPane = getContentPane();
+		contentPane.add(new MainPanel());
+	}
+}
+class TestClient 
+{
+	public static void main(String[] args) 
+	{
+		ClientFrame clientFrame = new ClientFrame();
+		clientFrame.setVisible(true);
+	}
+}
