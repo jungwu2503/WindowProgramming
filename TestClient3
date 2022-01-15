@@ -1,0 +1,325 @@
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+import java.io.*;
+import java.net.*;
+import java.util.ArrayList;
+
+class ButtonPanel extends JPanel
+{
+	MainPanel clientWnd;
+	JTextField ip;
+	JButton connectButton;
+	ButtonPanel(MainPanel clientWnd) {
+		this.clientWnd = clientWnd;
+
+		ip = new JTextField(15);
+		connectButton = new JButton("Connect");
+
+		ip.setText("localhost");
+
+		add(connectButton);
+		add(ip);
+		
+		connectButton.addActionListener(clientWnd);
+	}
+	String getIpAddress() {
+		return ip.getText();
+	}
+	void changeButton() {
+		if (connectButton.getText().equals("Connect")) {
+			connectButton.setText("Disconnect");
+		} else if (connectButton.getText().equals("Disconnect")) {
+			connectButton.setText("Connect");
+		}
+	}
+}
+class InputListener extends KeyAdapter
+{
+	MainPanel clientWnd;
+	JTextField textInput;
+	InputListener(JTextField textInput,MainPanel clientWnd) {
+		this.clientWnd = clientWnd;
+		this.textInput = textInput;
+	}
+	public void keyPressed(KeyEvent ev) {
+		int keyCode = ev.getKeyCode();
+		if (keyCode == KeyEvent.VK_ENTER)
+		{
+			String msg = textInput.getText().trim();
+			clientWnd.sendText("[I say] " + msg);
+			clientWnd.sendLine(msg);
+			textInput.setText("");
+		}
+	}
+}
+/*class ReportPanel extends JPanel
+{
+	MainPanel clientWnd;
+	JTextField reportText;
+	JButton reportButton;
+	JButton queryButton;
+	ReportPanel(MainPanel clientWnd) {
+		this.clientWnd = clientWnd;
+
+		reportText = new JTextField(15);
+		reportButton = new JButton("Report");
+		queryButton = new JButton("Query");
+
+		add(reportText);
+		add(reportButton);
+		add(queryButton);
+
+		reportButton.addActionListener(clientWnd);
+		queryButton.addActionListener(clientWnd);
+	}
+	String getReportText() {
+		return reportText.getText();
+	}
+}*/
+class InputPanel extends JPanel
+{
+	MainPanel clientWnd;
+	JTextField textInput;
+	//ReportPanel reportPanel;
+	InputPanel(MainPanel clientWnd) {
+		this.clientWnd = clientWnd;
+		setLayout(new GridLayout(2,1));
+
+		textInput = new JTextField();
+		textInput.addKeyListener(new InputListener(textInput,clientWnd));
+		//reportPanel = new ReportPanel(clientWnd);
+
+		add(textInput);
+		//add(reportPanel);
+	}
+	/*String getReportText() {
+		return reportPanel.getReportText();
+	}*/
+}
+//-------------------------------------------
+
+class MsgPanel extends JPanel
+{
+	MainPanel clientWnd;
+	JPanel panel;
+	int sendX = 250;
+	int receiveX = 30;
+	int yPos;
+	String currentMsg = "";
+	String prevMsg = "";
+	boolean isSending;
+	boolean isReceiving;
+	int cnt = 0;
+		
+	MsgPanel(MainPanel clientWnd) {
+		this.clientWnd = clientWnd;
+		panel = new JPanel();
+		panel.setForeground(Color.red);
+		yPos = 20;
+		add(panel);
+	}
+	
+	public void paintComponent(Graphics g) {
+		//super.paintComponent(g);
+		
+/*		for (int i = 0; i < cnt; i++) {
+			if (isSending) {
+				g.drawString(currentMsg, sendX, yPos);
+				
+			}
+			if (isReceiving) {
+				g.drawString(currentMsg, receiveX, yPos);
+			}
+			
+		} */
+		
+		yPos += 20;
+		
+		if (isSending) {
+			//g.drawString(currentMsg, sendX, yPos);
+			if (currentMsg.length() > 20) {
+				g.drawString(currentMsg.substring(0,20), sendX, yPos);
+				currentMsg = currentMsg.substring(20);
+				g.drawString(currentMsg, sendX, yPos+12);
+			}
+			
+		}
+		if (isReceiving) {
+			g.drawString(currentMsg, receiveX, yPos);
+		}
+	}
+	
+/*	public void draw(Graphics g) {
+		if (isSending) {
+			g.drawString(currentMsg, sendX, yPos);
+			g.drawString(prevMsg, sendX, yPos-20);
+		}
+		if (isReceiving) {
+			g.drawString(currentMsg, receiveX, yPos);
+			g.drawString(prevMsg, receiveX, yPos-20);
+		}
+		
+	}*/
+	
+	void sending(String str) {
+		isSending = true;
+		isReceiving = false;
+		currentMsg = str;
+		cnt++;
+		repaint();
+	}
+
+	void receiving(String str) {
+		isSending = false;
+		isReceiving = true;
+		currentMsg = str;
+		cnt++;
+		repaint();
+	}
+	
+}
+//------------------------------------------
+class MainPanel extends JPanel implements ActionListener
+{
+	String ipAddress = "localhosr";
+	Socket chatClient;
+	BufferedReader fromChatServer;
+	PrintWriter toChatServer;
+	Thread chatThread;
+
+	ButtonPanel buttonPanel;
+	InputPanel inputPanel;
+//	JTextArea textBox;
+	JScrollPane textPane;
+	MsgPanel msgPanel;	
+	
+	MainPanel() {
+		buttonPanel = new ButtonPanel(this);
+		setLayout(new BorderLayout());
+
+		//textBox = new JTextArea();
+		msgPanel = new MsgPanel(this);
+		//System.out.println(msgPanel.getBounds());
+		textPane = new JScrollPane(msgPanel);
+		//textPane.setBounds(50,50,200,200);
+		//textPane.getVerticalScrollBar();
+		//textPane.setVerticalScrollBar(new JScrollBar());
+		//textBox.setBorder(BorderFactory.createLoweredBevelBorder());
+		inputPanel = new InputPanel(this);
+		
+		//textPane.add(new JButton("버튼~~"));
+
+		//add(msgPanel);
+		add(buttonPanel,BorderLayout.NORTH);
+		add(textPane,BorderLayout.CENTER);
+		add(inputPanel,BorderLayout.SOUTH);
+		
+		textPane.registerKeyboardAction(
+			new ActionListener() {
+				public  void actionPerformed(ActionEvent evt) {
+					JScrollBar scrollBar = textPane.getVerticalScrollBar();
+					scrollBar.setValue(scrollBar.getValue() + scrollBar.getBlockIncrement());
+				}
+			}
+			, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0)
+			, JComponent.WHEN_IN_FOCUSED_WINDOW
+		);
+		
+	}
+	public void sendText(String msg) {
+		msgPanel.sending(msg);
+		
+	}
+	
+	public void receiveText(String msg) {
+		msgPanel.receiving(msg);
+	}
+	
+	//=====
+/*	public void sendMsg(String msg) {
+		JLabel label = new JLabel();
+		label.setBounds(300, 300, 50, 50);
+		
+	}*/
+	
+	public void sendLine(String msg) {
+		toChatServer.println(msg);
+		toChatServer.flush();
+	}
+	public void actionPerformed(ActionEvent ev) {
+		String cmd = ev.getActionCommand();
+		String ipAddress = buttonPanel.getIpAddress();
+		
+		if (cmd.equals("Connect"))
+		{
+			try
+			{
+				buttonPanel.changeButton();
+				chatClient = new Socket(ipAddress,7000);
+				receiveText("Connected...");
+				fromChatServer = new BufferedReader(new InputStreamReader(chatClient.getInputStream()));
+				toChatServer = new PrintWriter(chatClient.getOutputStream());
+
+				toChatServer.println("0");
+				toChatServer.flush();
+
+				chatThread = new Thread() {
+					public void run() {
+						try
+						{
+							String msg;
+							while(true) {
+								msg = fromChatServer.readLine();
+								receiveText("[Server says] " + msg);
+							}
+						}
+						catch (IOException ex)
+						{
+							System.out.println(ex);
+						}
+					}
+				};
+				chatThread.start();
+			}
+			catch (IOException ex)
+			{
+				System.out.println(ex);
+				chatThread.stop();
+			}
+		} else if (cmd.equals("Disconnect"))
+		{
+			try
+			{
+				buttonPanel.changeButton();
+				fromChatServer.close();
+				toChatServer.close();
+				chatClient.close();
+				chatThread.stop();
+			}
+			catch (IOException ex)
+			{
+				System.out.println(ex);
+			}
+		}
+	}
+}
+class ClientFrame extends JFrame
+{
+	ClientFrame() {
+		super("Client");
+		setSize(400,600);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		Container contentPane = getContentPane();
+		contentPane.add(new MainPanel());
+	}
+}
+class TestClient 
+{
+	public static void main(String[] args) 
+	{
+		ClientFrame clientFrame = new ClientFrame();
+		clientFrame.setResizable(false);
+		clientFrame.setVisible(true);
+	}
+}
