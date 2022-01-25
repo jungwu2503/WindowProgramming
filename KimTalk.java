@@ -149,14 +149,12 @@ class ChatPanel extends JPanel
 					}
 				}
 			}
-
-			//g.drawString(s,10,currentY);
 			currentY = currentY + deltaY;	
 			
 			Dimension sz = getSize();
 			if (currentY >= sz.height)
 			{
-				setPreferredSize(new Dimension(sz.width, currentY+deltaY+1000));
+				setPreferredSize(new Dimension(sz.width, currentY+deltaY));
 				updateUI();
 			}
 			mainWnd.scrollDown(currentY);
@@ -176,7 +174,7 @@ class ServerRole extends Thread
 	public void run() {
 		try
 		{
-			int portNumber = 8000;
+			int portNumber = 7000;
 			ServerSocket listenerSocket = new ServerSocket(portNumber);
 			mainWnd.writeText("Server started...");
 			mainWnd.writeText(mainWnd.getMyIP() + " on port: " + portNumber);
@@ -291,7 +289,7 @@ class MainPanel extends JPanel implements ActionListener
 		inputPanel.setEditable(false);
 
 		add(buttonPanel, BorderLayout.NORTH);
-		add(chatPanel, BorderLayout.CENTER);
+		add(chatPane, BorderLayout.CENTER);
 		add(inputPanel, BorderLayout.SOUTH);
 
 		try
@@ -343,7 +341,7 @@ class MainPanel extends JPanel implements ActionListener
 			setActionCommand("Disconnect");
 			try
 			{
-				chatClient = new Socket(ipAddress, 7000);
+				chatClient = new Socket(ipAddress, 8000);
 				writeText("Connected...");
 				fromChatServer = new BufferedReader(new InputStreamReader(chatClient.getInputStream()));
 				toChatServer = new PrintWriter(chatClient.getOutputStream());
@@ -368,9 +366,6 @@ class MainPanel extends JPanel implements ActionListener
 						{
 							System.out.println(ex);
 						}
-						amIServer = true;
-						setEditable(false);
-						setActionCommand("Connect");
 					}
 				};
 				fromServerThread.start();
