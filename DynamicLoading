@@ -1,0 +1,23 @@
+import java.util.*;
+
+class DynamicLoading 
+{
+	public static void main(String[] args) 
+	{
+		String name = "java.util.Stack";
+
+		try
+		{
+			Class what = Class.forName(name);
+			Stack s = (Stack)what.newInstance();
+
+			s.push(10);
+			s.push(20);
+			System.out.println(s);			
+		}
+		catch (Exception ex)
+		{
+		    ex.printStackTrace();
+		}
+	}
+}
