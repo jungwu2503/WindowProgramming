@@ -1,0 +1,30 @@
+import java.lang.reflect.*;
+import java.util.*;
+
+public class JavaReflection {
+
+	public static void main(String[] args) {
+		HashMap<String, Integer> l = new HashMap<String, Integer>();
+		l.put("Kim", 10);
+		identify(l);
+	}
+	
+	static void identify(Object o) {
+		Class c = o.getClass();
+		Method[] methods = c.getDeclaredMethods();
+		for (int i = 0; i < methods.length; i++) {
+			if (methods[i].getName().equals("isEmpty")) {
+				try {
+					Object[] args = new Object[0];
+					Object result = methods[i].invoke(o, args);
+					System.out.println(result);
+				}
+				catch(Exception ex) {
+					
+				}
+				break;
+			}
+		}
+	}
+
+}
