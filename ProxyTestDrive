@@ -1,0 +1,78 @@
+import java.lang.reflect.*;
+import java.util.*;
+import java.lang.*;
+
+interface Person 
+{
+	public String getName();
+	public int getAge();
+	public String toString();
+}
+
+class PersonImpl implements Person
+{
+	String name;
+	int age;
+
+	PersonImpl(String s, int n) {
+		name = s;
+		age = n;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public String toString() {
+		return "" + name + ":" + age; 
+	}
+
+}
+
+class PersonInvocationHandler implements InvocationHandler
+{
+	Person p;
+
+	PersonInvocationHandler(Person p) {
+		this.p = p;
+	}
+
+	public Object invoke(Object o, Method m, Object[] args) throws Throwable {
+		if (m.getName().equals("getName"))
+		{
+			return m.invoke(p, args);
+		}
+		else if (m.getName().equals("getAge"))
+		{
+			return new Integer(((Integer)(m.invoke(p, args))) + 10);
+		}
+		else {
+			return m.invoke(p, args);
+		}
+	}
+}
+
+class ProxyTestDrive
+{
+	public static void main(String[] args) 
+	{
+		Person p = new PersonImpl("kim", 32);
+
+		System.out.println("name = " + p.getName());
+		System.out.println("age = " + p.getAge());
+		System.out.println("person = " + p);
+
+		Person proxyPerson = (Person)Proxy.newProxyInstance(
+			p.getClass().getClassLoader(),
+			p.getClass().getInterfaces(),
+			new	PersonInvocationHandler(p)
+		);
+		System.out.println("name = " + proxyPerson.getName());
+		System.out.println("age = " + proxyPerson.getAge());
+		System.out.println("person = " + proxyPerson);
+	}
+}
