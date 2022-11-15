@@ -1,0 +1,246 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.*;
+
+import javax.swing.*;
+import javax.swing.table.*;
+
+class Student {
+	String name;
+	int kor;
+	int eng;
+	int math;
+	int total;
+	boolean award;
+	
+	Student (String name, int kor, int eng, int math) {
+		this.name = name;
+		this.kor = kor;
+		this.eng = eng;
+		this.math = math;
+		total = kor + eng + math;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public String getKor() {
+		return ""+kor;
+	}
+	
+	public String getEng() {
+		return ""+eng;
+	}
+	
+	public String getMath() {
+		return ""+math;
+	}
+	
+	public String getSum() {
+		return ""+total;
+	}
+	
+	public String getMoney() {
+		if (total >= 200) return "O";
+		return "X";
+	}
+	
+}
+
+class studentModel 
+
+public class JTableEx extends JFrame implements ActionListener {
+
+	ArrayList<Student> list;
+	Vector<String> title;
+	DefaultTableModel model;
+	JTable table;
+	JButton addBtn, removeBtn;
+	JMenuBar menuBar;
+	JMenu menu;
+	JMenu loadMenu;
+	JMenu saveMenu;
+	JMenuItem textLoadMenu, serialLoadMenu, textSaveMenu, serialSaveMenu;
+	JTextField nameField, korField, engField, mathField;
+	String fileName;
+	
+	JTableEx() {
+		menuBar = new JMenuBar();
+		menu = new JMenu("File");
+		menuBar.add(menu);
+		
+		menu.add(loadMenu = new JMenu("Load"));
+		menu.add(saveMenu = new JMenu("Save"));
+		loadMenu.add(textLoadMenu = new JMenuItem("Text"));
+		textLoadMenu.addActionListener((e) -> {
+			JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+		    chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		    chooser.setDialogType(JFileChooser.OPEN_DIALOG);
+		    int returnVal = chooser.showOpenDialog(null);
+		    if (returnVal != JFileChooser.APPROVE_OPTION) return;
+		    fileName = chooser.getSelectedFile().getPath();
+		    try {
+		    	FileInputStream fis = new FileInputStream(fileName);
+		    	ObjectInputStream ois = new ObjectInputStream(fis);
+		    	ois.readObject();		    	
+		    	ois.close();
+		    	fis.close();
+		    } catch (Exception ex) {
+			}
+		});
+		loadMenu.add(serialLoadMenu = new JMenuItem("Serialization"));
+		saveMenu.add(textSaveMenu = new JMenuItem("Text"));
+		textSaveMenu.addActionListener((e) -> {
+			JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+		    chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		    chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+		    int returnVal = chooser.showSaveDialog(null);
+		    if (returnVal != JFileChooser.APPROVE_OPTION) return;
+		    String saveName = chooser.getSelectedFile().getPath();
+		    if (saveName == null) return;
+		    if (saveName.length() == 0) return;
+		    fileName = saveName;
+		    try {
+		    	FileOutputStream fos = new FileOutputStream(fileName);
+		    	ObjectOutputStream oos = new ObjectOutputStream(fos);
+		    	oos.writeObject(table);
+		    	oos.flush();
+		    	oos.close();
+		    	fos.close();
+		    } catch (Exception ex) {
+			}
+		});
+		saveMenu.add(serialSaveMenu = new JMenuItem("Serialization"));
+		setJMenuBar(menuBar);
+		
+		list = new ArrayList<Student>();
+		list.add(new Student("홍충표",70,100,40));
+		list.add(new Student("고현규",80,30,60));
+		list.add(new Student("김동혁",40,70,50));
+		list.add(new Student("유승진",60,50,100));
+		
+		title = new Vector<String>(); //Vector
+		title.add("순위");
+		title.add("이름");
+		title.add("국어");
+		title.add("영어");
+		title.add("수학");
+		title.add("합계");
+		title.add("장학금여부");
+		
+		model = new DefaultTableModel(title, 0) {
+			public boolean isCellEditable(int r, int c) {
+				return (c != 0) ? true : false;
+			}
+		};
+		
+		table = new JTable(model);
+		JScrollPane sp = new JScrollPane(table);
+		
+		addBtn = new JButton("Add");
+		removeBtn = new JButton("Remove");
+		
+		JPanel p = new JPanel();
+		
+		nameField = new JTextField();
+		korField = new JTextField();
+		engField = new JTextField();
+		mathField = new JTextField();
+		
+		nameField.setPreferredSize(new Dimension(80, 30));
+		korField.setPreferredSize(new Dimension(40, 30));
+		engField.setPreferredSize(new Dimension(40, 30));
+		mathField.setPreferredSize(new Dimension(40, 30));
+		
+		p.add(new JLabel("이름:"));
+		p.add(nameField);
+		p.add(new JLabel("국어:"));
+		p.add(korField);
+		p.add(new JLabel("영어:"));
+		p.add(engField);
+		p.add(new JLabel("수학:"));
+		p.add(mathField);
+		p.add(addBtn);
+		p.add(removeBtn);
+		
+		for (Student data : list) {
+			Vector<String> al = new Vector<String>();
+			al.add("");
+			al.add(data.getName());
+			al.add(data.getKor());
+			al.add(data.getEng());
+			al.add(data.getMath());
+			al.add(data.getSum());
+			al.add(data.getMoney());
+			model.addRow(al);
+		}
+				
+		//table.setRowSorter();
+		
+		Container c = getContentPane();
+		c.add("Center", sp);
+		c.add("South", p);
+		
+		setBounds(700, 300, 550, 400);
+		setVisible(true);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		addBtn.addActionListener(this);
+		removeBtn.addActionListener(this);
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == addBtn) {
+			insert();
+		} else if (e.getSource() == removeBtn) {
+			remove();
+		}
+	}
+	
+	public void insert() {
+		/*list.add(new Student(nameField.getText(),Integer.parseInt(korField.getText()),Integer.parseInt(engField.getText()),Integer.parseInt(mathField.getText())));
+		for (Student data : list) {
+			Vector<String> al = new Vector<String>();
+			al.add("");
+			al.add(data.getName());
+			al.add(data.getKor());
+			al.add(data.getEng());
+			al.add(data.getMath());
+			al.add(data.getSum());
+			al.add(data.getMoney());
+			model.addRow(al);
+		}*/
+		list.add(new Student(nameField.getText(),Integer.parseInt(korField.getText()),Integer.parseInt(engField.getText()),Integer.parseInt(mathField.getText())));
+		Vector<String> al = new Vector<String>();
+		al.add("");
+		al.add(nameField.getText());
+		al.add(korField.getText());
+		al.add(engField.getText());
+		al.add(mathField.getText());
+		al.add((Integer.parseInt(korField.getText())+Integer.parseInt(engField.getText())+Integer.parseInt(mathField.getText()))+"");
+		al.add((Integer.parseInt(korField.getText())+Integer.parseInt(engField.getText())+Integer.parseInt(mathField.getText())) >= 200 ? "O" : "X");
+		model.addRow(al);
+	}
+	
+	public void remove() {
+		String name = nameField.getText();
+		for (int i = 0; i < model.getRowCount(); i++) {
+			if (name.equals(model.getValueAt(i, 1))) {
+				model.removeRow(i);
+				i=-1;
+			}
+		}
+	}
+	
+	public static void main(String[] args) {
+		new JTableEx();
+	}
+
+}
