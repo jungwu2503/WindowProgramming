@@ -1,0 +1,143 @@
+import java.awt.*;
+import java.awt.event.*;
+
+import javax.swing.*;
+
+class Racer extends Canvas implements Runnable {
+
+	private String name;
+	private int index;
+	private Image image;
+	
+	private int x;
+	
+	public Racer(String name, int index) {
+		this.name = name;
+		this.index = index;
+	}
+	
+	public void paint(Graphics g) {
+		super.paint(g);
+		Toolkit t = Toolkit.getDefaultToolkit();
+		switch (index) {
+			case 0: {
+				image = t.getImage("SulCharacter3.png");
+				g.drawImage(image, x, 0, 80, getHeight(), this);				
+				break;
+			}
+			case 1: {
+				image = t.getImage("Sulcon.png");
+				g.drawImage(image, x, 0, 80, getHeight(), this);
+				break;
+			}
+			case 2: {
+				image = t.getImage("SulCharacter4.png");
+				g.drawImage(image, x, 0, 80, getHeight(), this);
+				break;
+			}
+			case 3: {
+				image = t.getImage("pic1c.png");
+				g.drawImage(image, x, 0, 80, getHeight(), this);
+				break;
+			}
+			case 4: {
+				image = t.getImage("pic4.png");
+				g.drawImage(image, x, 0, 80, getHeight(), this);
+				break;
+			}
+		}
+	}
+	
+	public void startThread() {
+		Thread t = new Thread(this);
+		t.setPriority((int)(Math.random()*10)+1);
+		t.start();
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	@Override
+	public void run() {
+		while (true) {
+			x += (int)(Math.random()*6)+5;
+			repaint();
+			try {
+				Thread.sleep((int)(Math.random()*1000));
+			} catch (InterruptedException ex) {
+				ex.printStackTrace();
+			}
+			if (x > 515) break;
+		}
+		RaceFrame rf = new RaceFrame();
+		System.out.println(rf.rank + "등 " + name + "말");
+		rf.rank++;
+	}
+	
+}
+
+class RaceFrame extends JFrame implements ActionListener {
+	
+	private Racer[] racer;
+	private JButton startBtn;
+	
+	public static int rank = 1;
+	
+	RaceFrame() { 
+		
+	}
+	
+	RaceFrame(String[] args) {
+		super("Racing Game");
+		
+		JPanel wholePanel = new JPanel(new GridLayout(args.length-1, 1, 5, 5));
+		
+		racer = new Racer[args.length-1];
+		for (int i = 0; i < racer.length; i++) {
+			racer[i] = new Racer(args[i+1], i);
+			racer[i].setBackground(Color.CYAN);
+			wholePanel.add(racer[i]);
+		}
+		add("Center", wholePanel);
+		
+		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+		startBtn = new JButton("Start");
+		bottomPanel.add(startBtn);
+		add("South",bottomPanel);
+		startBtn.addActionListener(this);
+		
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setBounds(300, 300, 600, 400);
+		setVisible(true);
+		setResizable(false);
+		setLocationRelativeTo(null);
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		if (e.getActionCommand().equals("Start")) {
+			for (int i = 0; i < racer.length; i++) {
+				racer[i].startThread();
+			}
+		}
+	}
+	
+}
+
+public class Main {
+
+	public static void main(String[] args) {
+		if (args.length < 2) {
+			System.out.println("Usage: java RaceFrame count name, ...");
+			System.exit(0);
+		}
+		if (Integer.parseInt(args[0]) != args.length-1) {
+			System.out.println("Runner와 개수가 맞지 않음");
+			System.exit(0);
+		}
+		
+		RaceFrame rf = new RaceFrame(args);
+		rf.setVisible(true);
+	}
+
+}
