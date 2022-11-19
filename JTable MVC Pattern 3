@@ -1,0 +1,595 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.*;
+
+import javax.swing.*;
+import javax.swing.filechooser.*;
+import javax.swing.table.*;
+
+class StudentNameCellRenderer extends DefaultTableCellRenderer {
+	
+	class StringStudentCell extends JPanel {
+		JTable table;
+		String value;
+		boolean isSelected;
+		boolean hasFocus;
+		int row; int col;
+		StringStudentCell(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+			this.table = table;
+			this.value = (String)value;
+			this.isSelected = isSelected;
+			this.hasFocus = hasFocus;
+			this.row = row;
+			this.col = col;
+		}
+	
+		public void paintComponent(Graphics g) {
+			String s = value;
+			Dimension d = getSize();
+			if (isSelected) {
+				g.setColor(table.getSelectionBackground());
+				g.fillRect(0, 0, d.width, d.height);
+				
+				if (hasFocus) {
+					g.setColor(table.getGridColor());
+					g.drawRect(0, 0, d.width-1, d.height-1);
+				}
+			} else {
+				g.setColor(table.getBackground());
+				g.fillRect(0, 0, d.width, d.height);
+			}
+			
+			if (model.isScholarship(row)) {
+				g.setColor(Color.red);
+			} else {
+				g.setColor(Color.black);
+			}
+			g.drawString(s, 0, 11);
+		}
+	}	
+	
+	StudentModel model;
+	StudentNameCellRenderer(StudentModel model) {
+		this.model = model;
+	}
+	
+	public Component getTableCellRendererComponent(JTable table, 
+			Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+		if (col == 1) {
+			return new StringStudentCell(table, value, isSelected, hasFocus, row, col);
+		} else {
+			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+			return cell;
+		}
+	}
+	
+}
+
+class StudentCellRenderer extends DefaultTableCellRenderer {
+		
+	class IntegerStudentCell extends JPanel {
+		JTable table;
+		int value;
+		boolean isSelected;
+		boolean hasFocus;
+		int row; int col;
+		
+		IntegerStudentCell(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+			this.table = table;
+			this.value = (Integer)value;
+			this.isSelected = isSelected;
+			this.hasFocus = hasFocus;
+			this.row = row;
+			this.col = col;
+		}
+		
+		public void paintComponent(Graphics g) {
+			int val = (Integer)value;
+			String s = "" + val;
+			Dimension d = getSize();
+			if (isSelected) {
+				g.setColor(table.getSelectionBackground());
+				g.fillRect(0, 0, d.width, d.height);
+				
+				if (hasFocus) {
+					g.setColor(table.getGridColor());
+					g.drawRect(0, 0, d.width-1, d.height-1);
+				}
+			} else {
+				g.setColor(table.getBackground());
+				g.fillRect(0, 0, d.width, d.height);
+			}
+			
+			if (val >= 200) {
+				g.setColor(Color.blue);
+			} else {
+				g.setColor(Color.black);
+			}
+			
+			g.drawString(s, 0, this.getHeight()/5*4);
+		}
+		
+	}
+	
+	public Component getTableCellRendererComponent(JTable table,
+			Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+		if (col == 5) {
+			return new IntegerStudentCell(table, value, isSelected, hasFocus, row, col);
+		} else {
+			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+			return cell;
+		}
+	}
+}
+
+class StudentModel extends AbstractTableModel {
+	
+	static class Student implements Serializable {
+		String name;
+		int kor;
+		int eng;
+		int math;
+		int sum;
+		boolean scholarship;
+		
+		Student (String name, int kor, int eng, int math) {
+			this.name = name;
+			this.kor = kor;
+			this.eng = eng;
+			this.math = math;
+			sum = kor + eng + math;
+			if (sum > 200) scholarship = true;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public int getKor() {
+			return kor;
+		}
+		
+		public int getEng() {
+			return eng;
+		}
+		
+		public int getMath() {
+			return math;
+		}
+		
+		public int getSum() {
+			return sum;
+		}
+		
+		public boolean getScholarship() {
+			return scholarship;
+		}
+		
+	}
+	
+	ArrayList<Student> list = new ArrayList<Student>();
+	/*static int MAX = 100;
+	String name[];
+	int grade[][];
+	boolean scholar[];
+	int size;*/
+	
+	StudentModel() {
+		/*name = new String[MAX];
+		grade = new int[MAX][4];
+		scholar = new boolean[MAX];
+		size = 0;*/
+		list.add(new Student("홍충표",70,100,40));
+		list.add(new Student("고현규",80,30,60));
+		list.add(new Student("김동혁",40,70,50));
+		list.add(new Student("유승진",60,50,100));		
+	}
+	
+	public boolean isScholarship(int row) {
+		Student s = list.get(row);
+		return s.getScholarship();
+	}
+	
+	public int getColumnCount() {
+		return 7;
+	}
+	
+	public int getRowCount() {
+		return list.size();
+	}
+	
+	public void removeRow() {
+		
+	}
+	
+	/*title = new Vector<String>(); //Vector
+		title.add("순위");
+		title.add("이름");
+		title.add("국어");
+		title.add("영어");
+		title.add("수학");
+		title.add("합계");
+		title.add("장학금여부");*/
+	
+	public String getColumnName(int index) {
+		if (index == 0) return "순서";
+		else if (index == 1) return "이름";
+		else if (index == 2) return "국어";
+		else if (index == 3) return "영어";
+		else if (index == 4) return "수학";
+		else if (index == 5) return "합계";
+		else if (index == 6) return "장학생";
+		else return null;
+	}
+	
+	public Class getColumnClass(int index) {
+		if (index == 0) return Integer.class;
+		else if (index == 1) return String.class;
+		else if (index == 2) return Integer.class;
+		else if (index == 3) return Integer.class;
+		else if (index == 4) return Integer.class;
+		else if (index == 5) return Integer.class;
+		else if (index == 6) return Boolean.class;
+		else return null;
+	}
+	
+	public Object getValueAt(int r, int c) {
+		Student st = list.get(r);
+		if (c == 0) return r+1;
+		else if (c == 1) return st.name;
+		else if (c == 2) return st.getKor();
+		else if (c == 3) return st.getEng();
+		else if (c == 4) return st.getMath();
+		else if (c == 5) return st.getSum();
+		else if (c == 6) return st.getScholarship();
+		else return null;
+	}
+	
+	public void add(Student st) {
+		list.add(st);
+	}
+	
+	public void removeRow(int selected) {
+		list.remove(selected);
+	}
+		
+	public void remove(String name) {
+		Iterator<Student> it = list.iterator();
+		while (it.hasNext()) {
+			if (it.next().name.equals(name)) it.remove();
+		}
+	}
+	
+	public void addStudent(String name, int kor, int eng, int math) {
+		Student s = new Student(name, kor, eng, math);
+		add(s);
+	}
+	
+	public void saveText(String fileName) {
+		try {
+			FileWriter fw = new FileWriter(new File(fileName));
+			String str = "";
+			
+			ListIterator<Student> it = list.listIterator();
+			while (it.hasNext()) {
+				Student st = it.next();
+				String aLine = st.name + " " + st.kor + " " + st.eng + " " + st.math + "\r\n"; // 파일 저장시 마지막 커서 위치 고려
+				fw.write(aLine);
+				fw.flush();
+			}			
+			/* for (int i = 0; i < table.getRowCount(); i++) {
+				for (int j = 0; j < table.getColumnCount(); j++) {
+					str = table.getValueAt(i, j) + " ";
+					fw.write(str);
+				}
+				fw.write("\r\n");
+			} */
+			fw.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	public void loadText(String fileName) {
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)));
+			
+			int n = 0; // Text File의 라인수 Table load하기위해 미리 알아야함. Text파일에 미리 라인수를 명시하거나 반복문을 두번돌려서 첫반복문에 line수를 얻는다.
+			String aLine = null;
+			while ((aLine = reader.readLine()) != null) {
+				if (aLine.length() == 0) break;
+				n++;
+			}
+			reader.close();
+			
+			list.clear();
+			reader = new BufferedReader(new FileReader(new File(fileName)));
+			for (int i = 0; i < n; i++) {
+				aLine = reader.readLine();
+				String[] token = aLine.split(" ");
+				addStudent(token[0], Integer.parseInt(token[1]), Integer.parseInt(token[2]), Integer.parseInt(token[3]));
+			}
+			reader.close();
+			
+			/*String header = txtReader.readLine();
+			String[] line = header.split("\n");
+			StringTokenizer st;
+			for (int i = 0; i < line.length; i++) {
+				st = new StringTokenizer(line[i]);
+				st.nextToken();
+				String name = st.nextToken();
+				int kor = Integer.parseInt(st.nextToken());
+				int eng = Integer.parseInt(st.nextToken());
+				int math = Integer.parseInt(st.nextToken());
+				//Student s = new Student(name, kor, eng, math);
+				//model.add(s);
+			}
+			
+			table.updateUI();
+			txtReader.close();*/
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	public void serializeSave(String fileName) {
+		try {
+	    	FileOutputStream fos = new FileOutputStream(fileName);
+	    	ObjectOutputStream oos = new ObjectOutputStream(fos);
+	    	oos.writeObject(list);
+	    	oos.flush();
+	    	oos.close();
+	    	fos.close();
+	    } catch (Exception ex) {
+	    	ex.printStackTrace();
+		}
+		//System.out.println(list);
+	}
+	
+	public void serializeLoad(String fileName) {
+		try {
+	    	FileInputStream fis = new FileInputStream(fileName);
+	    	ObjectInputStream ois = new ObjectInputStream(fis);	    	
+	    	list = (ArrayList<Student>)ois.readObject();    // Reflection -> serialization 가능하게해줌	    	
+	    	ois.close();
+	    	fis.close();
+	    } catch (Exception ex) {
+	    	ex.printStackTrace();
+		}
+		//System.out.println(list);
+	}
+	
+}
+
+public class JTableEx extends JFrame implements ActionListener {
+
+	JTable table;
+	JButton addBtn, removeBtn;
+	JMenuBar menuBar;
+	JMenu menu;
+	JMenu loadMenu;
+	JMenu saveMenu;
+	JMenuItem textLoadMenu, serialLoadMenu, textSaveMenu, serialSaveMenu;
+	JTextField nameField, korField, engField, mathField;
+	String fileName; //x
+	StudentModel model;
+	//boolean rowSelected;
+	
+	JTableEx() {
+		menuBar = new JMenuBar();
+		menu = new JMenu("File");
+		menuBar.add(menu);
+		
+		menu.add(loadMenu = new JMenu("Load"));
+		menu.add(saveMenu = new JMenu("Save"));
+		loadMenu.add(textLoadMenu = new JMenuItem("Text"));
+		textLoadMenu.addActionListener((e) -> loadTextFile());
+		loadMenu.add(serialLoadMenu = new JMenuItem("Serialize"));
+		serialLoadMenu.addActionListener((e) -> serializedLoad());
+		saveMenu.add(textSaveMenu = new JMenuItem("Text"));
+		textSaveMenu.addActionListener((e) -> saveTextFile());
+		saveMenu.add(serialSaveMenu = new JMenuItem("Serialize"));
+		serialSaveMenu.addActionListener((e) -> serializedSave());
+		setJMenuBar(menuBar);
+				
+		table = new JTable(model = new StudentModel());
+		JScrollPane sp = new JScrollPane(table);
+		
+		//cellCenter(table);
+		table.setDefaultRenderer(Integer.class, new StudentCellRenderer());
+		table.setDefaultRenderer(String.class, new StudentNameCellRenderer(model));
+		
+		addBtn = new JButton("Add");
+		removeBtn = new JButton("Remove");
+		
+		JPanel p = new JPanel();
+		
+		nameField = new JTextField();
+		korField = new JTextField();
+		engField = new JTextField();
+		mathField = new JTextField();
+		
+		nameField.setPreferredSize(new Dimension(80, 30));
+		korField.setPreferredSize(new Dimension(40, 30));
+		engField.setPreferredSize(new Dimension(40, 30));
+		mathField.setPreferredSize(new Dimension(40, 30));
+		
+		nameField.setHorizontalAlignment(JTextField.RIGHT);
+		korField.setHorizontalAlignment(JTextField.RIGHT);
+		engField.setHorizontalAlignment(JTextField.RIGHT);
+		mathField.setHorizontalAlignment(JTextField.RIGHT);
+		
+		p.add(new JLabel("이름:"));
+		p.add(nameField);
+		p.add(new JLabel("국어:"));
+		p.add(korField);
+		p.add(new JLabel("영어:"));
+		p.add(engField);
+		p.add(new JLabel("수학:"));
+		p.add(mathField);
+		p.add(addBtn);
+		p.add(removeBtn);
+						
+		Container c = getContentPane();
+		c.add("Center", sp);
+		c.add("South", p);
+		
+		setBounds(700, 300, 550, 400);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		addBtn.addActionListener(this);
+		removeBtn.addActionListener(this);;
+	}
+
+	/*private void cellCenter(JTable table) {
+		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
+		dtcr.setHorizontalAlignment(SwingConstants.CENTER);	
+		TableColumnModel tcm = table.getColumnModel();
+		tcm.getColumn(0).setCellRenderer(dtcr);
+		tcm.getColumn(1).setCellRenderer(dtcr);
+	}*/
+	
+	private void saveTextFile() {
+		JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt", "txt");
+		chooser.setFileFilter(filter);
+		int ret = chooser.showSaveDialog(null);
+		if (ret != JFileChooser.APPROVE_OPTION) return;
+		String fileName = chooser.getSelectedFile().getPath();
+		
+		model.saveText(fileName);
+		
+		/*JFileChooser chooser = new JFileChooser();
+		
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt", "txt");
+		chooser.setFileFilter(filter);
+		int ret = chooser.showSaveDialog(null);
+		if (ret != JFileChooser.APPROVE_OPTION) return;
+		String fileName = chooser.getSelectedFile().getPath();
+		
+		try {
+			FileWriter fw = new FileWriter(new File(fileName));
+			fw.write(table.getAccessibleContext().toString());
+			fw.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}*/
+		
+		/* JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+	    chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+	    chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+	    int returnVal = chooser.showSaveDialog(null);
+	    if (returnVal != JFileChooser.APPROVE_OPTION) return;
+	    String saveName = chooser.getSelectedFile().getPath();
+	    if (saveName == null) return;
+	    if (saveName.length() == 0) return;
+	    fileName = saveName;
+	    try {
+	    	FileOutputStream fos = new FileOutputStream(fileName);
+	    	ObjectOutputStream oos = new ObjectOutputStream(fos);
+	    	oos.writeObject(model);
+	    	oos.flush();
+	    	oos.close();
+	    	fos.close();
+	    } catch (Exception ex) {
+		} */
+	}
+	
+	private void loadTextFile() {
+		JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+	    chooser.setDialogType(JFileChooser.OPEN_DIALOG);
+	    int returnVal = chooser.showOpenDialog(null);
+	    if (returnVal != JFileChooser.APPROVE_OPTION) return;
+	    fileName = chooser.getSelectedFile().getPath();
+	    
+	    model.loadText(fileName);
+	    table.updateUI();
+		/*JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+	    chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+	    chooser.setDialogType(JFileChooser.OPEN_DIALOG);
+	    int returnVal = chooser.showOpenDialog(null);
+	    if (returnVal != JFileChooser.APPROVE_OPTION) return;
+	    fileName = chooser.getSelectedFile().getPath();
+	    try {
+	    	FileInputStream fis = new FileInputStream(fileName);
+	    	ObjectInputStream ois = new ObjectInputStream(fis);
+	    	ois.readObject();		    	
+	    	ois.close();
+	    	fis.close();
+	    } catch (Exception ex) {
+		}*/
+	}
+	
+	private void serializedSave() {
+		JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+	    chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+	    chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+	    int returnVal = chooser.showSaveDialog(null);
+	    if (returnVal != JFileChooser.APPROVE_OPTION) return;
+	    String fileName = chooser.getSelectedFile().getPath();
+	    if (fileName == null) return;
+	    if (fileName.length() == 0) return;
+	    
+	    model.serializeSave(fileName);
+	}
+	
+	private void serializedLoad() {
+		JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+	    chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+	    chooser.setDialogType(JFileChooser.OPEN_DIALOG);
+	    int returnVal = chooser.showOpenDialog(null);
+	    if (returnVal != JFileChooser.APPROVE_OPTION) return;
+	    String fileName = chooser.getSelectedFile().getPath();
+	    if (fileName == null) return;
+	    if (fileName.length() == 0) return;
+	    
+	    model.serializeLoad(fileName);
+	    table.updateUI();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == addBtn) {
+			add();
+			nameField.setText("");
+			korField.setText("");
+			engField.setText("");
+			mathField.setText("");
+		} else if (e.getSource() == removeBtn) {
+			int[] selected = table.getSelectedRows();
+			
+			for (int i = selected.length - 1; i >= 0; i--) {
+				model.removeRow(selected[i]);
+			}
+			table.updateUI();
+		}
+	}
+	
+	public void add() {
+		/* Student st = new Student(nameField.getText(),
+				Integer.parseInt(korField.getText()),
+				Integer.parseInt(engField.getText()),
+				Integer.parseInt(mathField.getText()));
+		model.add(st); */
+		model.addStudent(nameField.getText(),
+				Integer.parseInt(korField.getText()),
+				Integer.parseInt(engField.getText()),
+				Integer.parseInt(mathField.getText()));
+		table.updateUI();
+	}
+	
+	public void remove() {
+		//if (rowSelected) model.remove();
+		String name = nameField.getText();
+		model.remove(name);
+		table.updateUI();
+	}
+	
+	public static void main(String[] args) {
+		JFrame frame = new JTableEx();
+		frame.setVisible(true);
+	}
+
+}
