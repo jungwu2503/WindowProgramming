@@ -59,21 +59,24 @@ public class TreeFrame extends JFrame {
 		
 		panel = new JPanel();
 		funcPanel = new JPanel();
-		funcPanel.setLayout(new BoxLayout(funcPanel, BoxLayout.PAGE_AXIS));
+		funcPanel.setLayout(new BoxLayout(funcPanel, BoxLayout.LINE_AXIS));
 		
 		model = new MyTreeModel();
 		tree = new JTree();
 		sp = new JScrollPane(tree);
+		sp.setPreferredSize(new Dimension(WIDTH/3*2,HEIGHT/6*5));
 		getContentPane().add(panel);
-		//panel.add(sp);
-		//panel.add(funcPanel);
 		
-		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sp, funcPanel);
-		Dimension sz = getSize();
-		sp.setPreferredSize(new Dimension(WIDTH/2,HEIGHT));
+		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, sp, funcPanel);
 		panel.add(splitPane);
 		
 		rootField = new JTextField(10);
+		parentField = new JTextField(5);
+		parentLabel = new JLabel("Parent");
+		parentField.setEnabled(false);
+		childField = new JTextField(5);		
+		childLabel = new JLabel("Child");
+		childField.setEnabled(false);
 		
 		setRootBtn = new JButton("Root »ý¼º");
 		setRootBtn.addActionListener((e) -> {
@@ -83,21 +86,15 @@ public class TreeFrame extends JFrame {
 			
 			rootField.setEditable(false);
 			setRootBtn.setEnabled(false);	
+			parentField.setEnabled(true);
+			childField.setEnabled(true);
 		});
 		
 		JPanel p1 = new JPanel();
 		p1.add(rootField);
 		p1.add(setRootBtn);
 		funcPanel.add(p1);
-		
-		parentField = new JTextField(5);
-		
-		parentLabel = new JLabel("Parent");
-		
-		childField = new JTextField(5);
-		
-		childLabel = new JLabel("Child");
-		
+				
 		JPanel p2 = new JPanel();
 		p2.add(parentLabel);
 		p2.add(parentField);
@@ -112,10 +109,7 @@ public class TreeFrame extends JFrame {
 			
 			TreePath path = model.addNewChild(parent, child);
 			tree.expandPath(path);
-			System.out.println(path);
 			tree.updateUI();
-			
-			System.out.println(model.getTotalNodesNumber());
 		});
 		
 		deleteBtn = new JButton("Delete");
@@ -133,12 +127,9 @@ public class TreeFrame extends JFrame {
 		funcPanel.add(p3);
 		
 		MyTreeCellRenderer renderer = new MyTreeCellRenderer();
-//		renderer.setClosedIcon(new ImageIcon("red-ball.gif"));
-//		renderer.setOpenIcon(new ImageIcon("yellow-ball.gif"));
-//		renderer.setLeafIcon(new ImageIcon("blue-ball.gif"));
 		tree.setCellRenderer(renderer);
 		
-		getContentPane().add(splitPane);
+		getContentPane().add(panel);
 		
 		setSize(WIDTH,HEIGHT);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);

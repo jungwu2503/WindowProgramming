@@ -4,7 +4,7 @@ import java.util.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
-public class MyTreeModel implements TreeModel, Serializable {
+public class MyTreeModel extends DefaultTreeModel {// implements Serializable(DefaultTreeModel¿Ã Serializable¿ª implement«‘) {
 
 	private TreeNode root;
 	
@@ -13,27 +13,28 @@ public class MyTreeModel implements TreeModel, Serializable {
 	}
 	
 	void setRoot(String s) {
-		root = new TreeNode(s);
+		root = new StringTreeNode(s);
 	}
 
 	TreePath addNewChild(String parent, String child) {
 		if (root == null) return null;
-		TreeNode pNode = root.find(parent);
+		TreeNode pNode = ((StringTreeNode)root).find(parent);
 		if (pNode == null) return null;
-		TreeNode pChildNode = pNode.addChild(child);
+		TreeNode pChildNode = ((StringTreeNode)pNode).addChild(child);
 		
-		TreePath path = pChildNode.constructTreePath();
+		TreePath path = ((StringTreeNode)pChildNode).constructTreePath();
 		return path;
 	}
 	
 	boolean deleteChild(String parent, String child) {
 		if (root == null) return false;
-		TreeNode pNode = root.find(parent);
+		TreeNode pNode = ((StringTreeNode)root).find(parent);
 		if (pNode == null) return false;
-		TreeNode cNode = root.find(child);
+		TreeNode cNode = ((StringTreeNode)root).find(child);
 		if (cNode == null) return false;
 		
-		pNode.deleteChild(pNode.getIndexOfChild(cNode));
+		StringTreeNode tmp = (StringTreeNode)pNode;
+		tmp.deleteChild(tmp.getIndexOfChild(cNode));
 		return true;
 	}
 	
@@ -58,7 +59,7 @@ public class MyTreeModel implements TreeModel, Serializable {
 	public int getIndexOfChild(Object parent, Object child) {
 		TreeNode node = (TreeNode)parent;
 		
-		return node.getIndexOfChild((TreeNode)child);
+		return node.getIndex((TreeNode)child);
 	}
 	
 	public Object getRoot() {
@@ -69,7 +70,7 @@ public class MyTreeModel implements TreeModel, Serializable {
 		try {
 			FileInputStream fis = new FileInputStream(fileName);
 			ObjectInputStream ois = new ObjectInputStream(fis);
-			root = (TreeNode)ois.readObject();
+			root = (StringTreeNode)ois.readObject();
 			ois.close();
 			fis.close();
 		} catch (Exception e) {
@@ -114,8 +115,8 @@ public class MyTreeModel implements TreeModel, Serializable {
 		try {
 			FileWriter fw = new FileWriter(new File(fileName));
 			
-			String s = root.getData() + "\n";
-			s += root.dfsSave();
+			String s = ((StringTreeNode)root).getData() + "\n";
+			s += ((StringTreeNode)root).dfsSave();
 			fw.write(s);
 			
 			fw.flush();			
@@ -127,22 +128,22 @@ public class MyTreeModel implements TreeModel, Serializable {
 	
 	public int getDepth() {
 		if (root == null) return 0;
-		return root.getDepth();
+		return ((StringTreeNode)root).getDepth();
 	}
 	
 	public int getNumberOfLeafNodes() {
 		if (root == null) return 0;
-		return root.getNumberOfLeafNodes();
+		return ((StringTreeNode)root).getNumberOfLeafNodes();
 	}
 	
 	public int getNoneLeafNodesNumber() {
 		if (root == null) return 0;
-		return root.getNoneLeafNodesNumber();
+		return ((StringTreeNode)root).getNoneLeafNodesNumber();
 	}
 	
 	public int getTotalNodesNumber() {
 		if (root == null) return 0;
-		return root.getTotalNodesNumber();
+		return ((StringTreeNode)root).getTotalNodesNumber();
 	}
 	
 	public void addTreeModelListener(TreeModelListener l) {
@@ -158,3 +159,4 @@ public class MyTreeModel implements TreeModel, Serializable {
 	}
 	
 }
+
