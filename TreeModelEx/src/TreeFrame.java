@@ -1,14 +1,12 @@
 import java.awt.*;
+import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.*;
 
-public class TreeFrame extends JFrame {
-	static int WIDTH = 600;
-	static int HEIGHT = 800;
+class MainPanel extends JPanel {
 	JTree tree;
-	JPanel panel;
 	MyTreeModel model;
 	JButton setRootBtn;
 	JTextField rootField;
@@ -19,56 +17,19 @@ public class TreeFrame extends JFrame {
 	JButton addBtn;
 	JButton deleteBtn;
 	JScrollPane sp;
-	JMenuBar menuBar;
-	JMenu menu;
 	JSplitPane splitPane;
 	JPanel funcPanel;
-	JMenu serMenu;
-	JMenu txtMenu;
-	JMenuItem serSave;
-	JMenuItem serLoad;
-	JMenuItem txtSave;
-	JMenuItem txtLoad;
-	
-	TreeFrame() {
-		menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-		
-		menu = new JMenu("File");
-		menuBar.add(menu);
-		
-		serMenu = new JMenu("Serialize");
-		txtMenu = new JMenu("Text");
-		
-		serLoad = new JMenuItem("Load");
-		serSave = new JMenuItem("Save");
-		txtLoad = new JMenuItem("Load");
-		txtSave = new JMenuItem("Save");
-
-		serMenu.add(serLoad);
-		serMenu.add(serSave);
-		txtMenu.add(txtLoad);
-		txtMenu.add(txtSave);
-		serLoad.addActionListener((e) -> serialLoad());
-		serSave.addActionListener((e) -> serialSave());
-		txtLoad.addActionListener((e) -> textLoad());
-		txtSave.addActionListener((e) -> textSave());
-		
-		menu.add(serMenu);
-		menu.add(txtMenu);
-		
-		panel = new JPanel();
+	MainPanel() {		
 		funcPanel = new JPanel();
 		funcPanel.setLayout(new BoxLayout(funcPanel, BoxLayout.LINE_AXIS));
 		
 		model = new MyTreeModel();
-		tree = new JTree();
+		DefaultTreeModel tmpModel = new DefaultTreeModel(new DefaultMutableTreeNode("Please set the root node"));
+		tree = new JTree(tmpModel);
 		sp = new JScrollPane(tree);
-		sp.setPreferredSize(new Dimension(WIDTH/3*2,HEIGHT/6*5));
-		getContentPane().add(panel);
+		sp.setPreferredSize(new Dimension(600/3*2,800/6*5));
 		
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, sp, funcPanel);
-		panel.add(splitPane);
 		
 		rootField = new JTextField(10);
 		parentField = new JTextField(5);
@@ -107,18 +68,31 @@ public class TreeFrame extends JFrame {
 			String parent = parentField.getText();
 			String child = childField.getText();
 			
-			TreePath path = model.addNewChild(parent, child);
-			tree.expandPath(path);
-			tree.updateUI();
+			addBtnAction(parent, child);
 		});
 		
 		deleteBtn = new JButton("Delete");
 		deleteBtn.addActionListener((e) -> {
+			TreePath selectedPath = tree.getSelectionPath();
+			model.remove(selectedPath);
+			//tree.removeSelectionPath(selectedPath);
+			/*
 			String parent = parentField.getText();
 			String child = childField.getText();
 			
-			model.deleteChild(parent, child);
+			model.deleteChild(parent, child);*/
 			tree.updateUI();
+		});
+		
+		childField.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				String parentText = parentField.getText();
+				String childText = childField.getText();
+				if (parentText.isEmpty() || childText.isEmpty()) return;
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					addBtnAction(parentText, childText);
+				}
+			}
 		});
 		
 		JPanel p3 = new JPanel();
@@ -129,12 +103,92 @@ public class TreeFrame extends JFrame {
 		MyTreeCellRenderer renderer = new MyTreeCellRenderer();
 		tree.setCellRenderer(renderer);
 		
-		getContentPane().add(panel);
-		
+		add(splitPane);
+	}
+	
+	public void addBtnAction(String parent, String child) {
+		TreePath path = model.addNewChild(parent,child);
+		tree.expandPath(path);
+		parentField.setText("");
+		childField.setText("");
+		tree.updateUI();
+	}
+	
+	public void serialLoad(String fileName) {
+		model.serialLoad(fileName);
+		tree.setModel(model);
+		rootField.setEditable(false);
+		setRootBtn.setEnabled(false);	
+		tree.updateUI();
+	}
+	
+	public MyTreeModel getModel() {
+		return model;
+	}
+	
+	public void textLoad(String fileName) {
+		model.txtLoad(fileName);
+		tree.setModel(model);
+		rootField.setEditable(false);
+		setRootBtn.setEnabled(false);	
+		tree.updateUI();
+	}
+	
+	public Dimension getPreferredSize() {
+		return new Dimension(600,800);
+	}
+}
+
+public class TreeFrame extends JFrame {
+	MainPanel mainPanel;
+	static int WIDTH = 600;
+	static int HEIGHT = 800;
+	JMenuBar menuBar;
+	JMenu menu;
+	JMenu serMenu;
+	JMenu txtMenu;
+	JMenuItem serSave;
+	JMenuItem serLoad;
+	JMenuItem txtSave;
+	JMenuItem txtLoad;
+
+	TreeFrame() {
+		setTitle("Tree Test");
 		setSize(WIDTH,HEIGHT);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
+		
+		menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		menu = new JMenu("File");
+		menuBar.add(menu);
+		
+		serMenu = new JMenu("Serialize");
+		txtMenu = new JMenu("Text");
+		
+		serLoad = new JMenuItem("Load");
+		serSave = new JMenuItem("Save");
+		txtLoad = new JMenuItem("Load");
+		txtSave = new JMenuItem("Save");
+
+		serMenu.add(serLoad);
+		serMenu.add(serSave);
+		txtMenu.add(txtLoad);
+		txtMenu.add(txtSave);
+		serLoad.addActionListener((e) -> serialLoad());
+		serSave.addActionListener((e) -> serialSave());
+		txtLoad.addActionListener((e) -> textLoad());
+		txtSave.addActionListener((e) -> textSave());
+		
+		menu.add(serMenu);
+		menu.add(txtMenu);
+		
+		mainPanel = new MainPanel();
+		getContentPane().add(mainPanel);
 	}
+	
+	
 	
 	public void serialLoad() {
 		JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
@@ -146,11 +200,7 @@ public class TreeFrame extends JFrame {
 		if (fileName == null) return;
 		if (fileName.length() == 0) return;
 		
-		model.serialLoad(fileName);
-		tree.setModel(model);
-		rootField.setEditable(false);
-		setRootBtn.setEnabled(false);	
-		tree.updateUI();
+		mainPanel.serialLoad(fileName);
 	}
 	
 	public void serialSave() {
@@ -163,7 +213,7 @@ public class TreeFrame extends JFrame {
 		if (fileName == null) return;
 		if (fileName.length() == 0) return;
 		
-		model.serialSave(fileName);
+		mainPanel.getModel().serialSave(fileName);
 	}
 	
 	public void textLoad() {
@@ -176,11 +226,7 @@ public class TreeFrame extends JFrame {
 		if (fileName == null) return;
 		if (fileName.length() == 0) return;
 		
-		model.txtLoad(fileName);
-		tree.setModel(model);
-		rootField.setEditable(false);
-		setRootBtn.setEnabled(false);	
-		tree.updateUI();
+		mainPanel.textLoad(fileName);
 	}
 	
 	public void textSave() {
@@ -195,7 +241,7 @@ public class TreeFrame extends JFrame {
 		if (fileName == null) return;
 		if (fileName.length() == 0) return;
 		
-		model.txtSave(fileName);
+		mainPanel.getModel().txtSave(fileName);
 	}
 	
 }

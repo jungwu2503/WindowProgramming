@@ -3,74 +3,22 @@ import java.util.*;
 
 import javax.swing.tree.*;
 
-class EnumerationAdapter<E> implements Enumeration<E> {
-	Iterator<E> it;
-	public EnumerationAdapter(Iterator<E> it) {
-		this.it = it;
-	}
-	public boolean hasMoreElements() {
-		return it.hasNext();
-	}
-	public E nextElement() {
-		return it.next();
-	}
-}
-
-public class StringTreeNode implements TreeNode, Serializable {
-
-	private String data;
-	private LinkedList<TreeNode> children;
-	private TreeNode parent;
+public class StringTreeNode extends DefaultMutableTreeNode {
 	
 	StringTreeNode(String s) {
-		data = s;
-		children = new LinkedList<TreeNode>();
-		parent = null;
+		super(s);
 	}
 	
 	String getData() {
-		return data;
-	}
-	
-	public int getIndex(TreeNode node) {
-		return children.indexOf(node);
-	}
-	
-	public TreeNode getParent() {
-		return parent;
+		return (String)userObject;
 	}
 	
 	public String toString() {
-		return data;
-	}
-	
-	public boolean isLeaf() {
-		if (children.size() == 0) return true;
-		return false;
-	}
-	
-	public Enumeration children() {
-		return new EnumerationAdapter(children.listIterator());
-	}
-	
-	public boolean getAllowsChildren() {
-		return true;
-	}
-	
-	public int getChildCount() {
-		return children.size();
-	}
-	
-	public TreeNode getChildAt(int i) {
-		return children.get(i);
-	}
-	
-	public int getIndexOfChild(TreeNode child) {
-		return children.indexOf(child);
+		return (String)userObject;
 	}
 	
 	void depthFirstTraverse() {
-		System.out.println(data);
+		System.out.println(userObject);
 		
 		ListIterator<TreeNode> i = children.listIterator();
 		while (i.hasNext()) {
@@ -85,7 +33,7 @@ public class StringTreeNode implements TreeNode, Serializable {
 		ListIterator<TreeNode> i = children.listIterator();
 		while (i.hasNext()) {
 			StringTreeNode child = (StringTreeNode)i.next();
-			s += data + " " + child.data + "\n";
+			s += userObject + " " + child.userObject + "\n";
 			child.dfsSave();
 		}
 		return s;
@@ -140,7 +88,7 @@ public class StringTreeNode implements TreeNode, Serializable {
 	}
 	
 	void depthFirstEnumeration(LinkedList<String> pEnumeration) {
-		pEnumeration.addLast(data);
+		pEnumeration.addLast((String)userObject);
 		ListIterator<TreeNode> i = children.listIterator();
 		while(i.hasNext()) {
 			StringTreeNode child = (StringTreeNode)i.next();
@@ -149,7 +97,7 @@ public class StringTreeNode implements TreeNode, Serializable {
 	}
 	
 	TreeNode find(String s) {
-		if (data.equals(s)) return this;
+		if (userObject.equals(s)) return this;
 		
 		ListIterator<TreeNode> i = children.listIterator();
 		while (i.hasNext()) {
@@ -162,8 +110,7 @@ public class StringTreeNode implements TreeNode, Serializable {
 	
 	TreeNode addChild(String s) {
 		StringTreeNode pNewNode = new StringTreeNode(s);
-		children.addLast(pNewNode);
-		pNewNode.parent = this;
+		add(pNewNode);
 		return pNewNode;
 	}
 	

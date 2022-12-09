@@ -1,21 +1,31 @@
 import java.io.*;
 import java.util.*;
 
+import javax.swing.JOptionPane;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
-public class MyTreeModel extends DefaultTreeModel {// implements Serializable(DefaultTreeModel¿Ã Serializable¿ª implement«‘) {
+public class MyTreeModel extends DefaultTreeModel {
 
-	private TreeNode root;
-	
 	MyTreeModel() {
-		root = null;
+		super(null);
 	}
 	
 	void setRoot(String s) {
 		root = new StringTreeNode(s);
+		super.setRoot(root);
 	}
 
+	void remove(TreePath path) {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+		if (!node.isLeaf()) {
+			JOptionPane.showMessageDialog(null, "Please select terminal node");
+			return;
+		}
+		DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
+		parent.remove(node);
+	}
+	
 	TreePath addNewChild(String parent, String child) {
 		if (root == null) return null;
 		TreeNode pNode = ((StringTreeNode)root).find(parent);
@@ -34,36 +44,8 @@ public class MyTreeModel extends DefaultTreeModel {// implements Serializable(De
 		if (cNode == null) return false;
 		
 		StringTreeNode tmp = (StringTreeNode)pNode;
-		tmp.deleteChild(tmp.getIndexOfChild(cNode));
+		tmp.deleteChild(tmp.getIndex(cNode));
 		return true;
-	}
-	
-	public boolean isLeaf(Object obj) {
-		TreeNode node = (TreeNode)obj;
-		
-		return node.isLeaf();
-	}
-	
-	public int getChildCount(Object obj) {
-		TreeNode node = (TreeNode)obj;
-		
-		return node.getChildCount();
-	}
-	
-	public Object getChild(Object obj, int index) {
-		TreeNode node = (TreeNode)obj;
-		
-		return node.getChildAt(index);
-	}
-	
-	public int getIndexOfChild(Object parent, Object child) {
-		TreeNode node = (TreeNode)parent;
-		
-		return node.getIndex((TreeNode)child);
-	}
-	
-	public Object getRoot() {
-		return root;
 	}
 	
 	public void serialLoad(String fileName) {
@@ -159,4 +141,3 @@ public class MyTreeModel extends DefaultTreeModel {// implements Serializable(De
 	}
 	
 }
-
