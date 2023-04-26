@@ -1,0 +1,73 @@
+import java.awt.*;
+import java.awt.image.*;
+import java.io.*;
+
+public class KImage extends KBox {
+
+    transient private BufferedImage image;
+
+    KImage(Image img, int x, int y) {
+        super(Color.black, x, y, x + ((BufferedImage)img).getWidth(),
+				y + ((BufferedImage)img).getHeight());
+        //this.image = image;
+
+	int w = ((BufferedImage)img).getWidth();
+	int h = ((BufferedImage)img).getHeight();
+	int type = ((BufferedImage)img).getType();
+	image = new BufferedImage(w, h, type);
+
+	/*for (int i = 0; i < w; i++) {
+	    for (int j = 0; j < h; j++) {
+		image.setRGB(i,j,((BufferedImage)img).getRGB(i,j));
+	    }
+	}*/
+	image.setData(((BufferedImage)img).getData());
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out)
+	throws IOException {
+	out.defaultWriteObject();
+	int w = image.getWidth();
+	int h = image.getHeight();
+	int type = image.getType();
+	out.writeInt(w);
+	out.writeInt(h);
+	out.writeInt(type);
+	for (int i = 0; i < w; i++) {
+	    for (int j = 0; j < h; j++) {
+		out.writeInt(image.getRGB(i,j));
+	    }
+	}
+    }
+
+    private void readObject(java.io.ObjectInputStream in)
+	throws IOException, ClassNotFoundException {
+	in.defaultReadObject();
+	int w, h, type;
+	
+	w = in.readInt();
+	h = in.readInt();
+	type = in.readInt();
+
+	image = new BufferedImage(w, h, type);
+	for (int i = 0; i < w; i++) {
+	    for (int j = 0; j < h; j++) {
+		int rgb = in.readInt();
+		image.setRGB(i,j,rgb);
+	    }
+	}
+    }
+
+    protected void drawEx(Graphics g) {
+        if (image != null) {
+            g.drawImage(image, x1, y1, x2 - x1, y2 - y1, null);
+        }
+    }
+
+    KFigure copy() {
+        KImage newImage = new KImage(image, x1, y1);
+        newImage.popup = popup;
+        newImage.move(MOVE_DX, MOVE_DY);
+        return newImage;
+    }
+}
