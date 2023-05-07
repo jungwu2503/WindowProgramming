@@ -1,0 +1,85 @@
+import java.util.*;
+
+class ServiceMan implements Comparable
+{
+    static HashMap<String, Integer> ranks = new HashMap<String, Integer>();
+    static {
+	ranks.put("/",1);
+	ranks.put("//",2);
+	ranks.put("///",3);
+	ranks.put("////",4);
+	ranks.put("^",5);
+	ranks.put("^^",6);
+	ranks.put("^^^",7);
+	ranks.put("@",8);
+	ranks.put("@@",9);
+	ranks.put("@@@",10);
+	ranks.put("*",11);
+	ranks.put("**",12);
+    }
+    /*static ArrayList<String> ranks = new ArrayList<String>();
+    static {
+	ranks.add("/");
+	ranks.add("//");
+	ranks.add("///");
+	ranks.add("////");
+	ranks.add("^");
+	ranks.add("^^");
+	ranks.add("^^^");
+	ranks.add("@");
+	ranks.add("@@");
+	ranks.add("@@@");
+	ranks.add("*");
+	ranks.add("**");
+    }*/
+    String rank;
+    String name;
+    ServiceMan(String rank, String name) {
+	this.rank = rank;
+	this.name = name;
+    }
+    public int compareTo(Object o) {
+	ServiceMan other = (ServiceMan)o;
+	int rank1 = ranks.get(rank);
+	int rank2 = ranks.get(other.rank);
+	return rank2 - rank1;
+    }
+    public String toString() {
+	return "<" + rank + name + ">";
+    }
+}
+
+class SetTestDriver
+{
+	public static void main(String[] args) 
+	{
+		//Deque<ServiceMan> d = new ArrayDeque<ServiceMan>();
+		//Deque<ServiceMan> d = new LinkedList<ServiceMan>();
+
+		//EnumSet<Day> s = new EnumSet<Day>();
+
+		//TreeSet<ServiceMan> set = new TreeSet<ServiceMan>();
+		//HashSet<ServiceMan> set = new HashSet<ServiceMan>();
+
+		PriorityQueue<ServiceMan> set= new PriorityQueue<ServiceMan>();
+
+		set.add(new ServiceMan("**", "Mike"));
+		set.add(new ServiceMan("^^", "Smith"));
+		set.add(new ServiceMan("^", "Bob"));
+		set.add(new ServiceMan("@@@", "Kim"));
+		set.add(new ServiceMan("@@@", "Lee"));
+		set.add(new ServiceMan("*", "James"));
+		set.add(new ServiceMan("/", "John"));
+		set.add(new ServiceMan("//", "Woster"));	
+		set.add(new ServiceMan("^", "Sam"));
+		set.add(new ServiceMan("@", "Biden"));
+
+		System.out.println(set.size());
+		System.out.println(set);
+		
+		/*while(!set.isEmpty()) {
+			ServiceMan man = set.remove();
+			System.out.println(man);
+		}*/
+	}
+}
